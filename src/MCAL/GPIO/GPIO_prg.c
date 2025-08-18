@@ -169,6 +169,70 @@ u8 MGPIO_u8GetPinValue(u8 A_u8PortID, u8 A_u8PinID)
     }
 }
 
+void MGPIO_vSetAllPort(u8 A_u8PortID, u16 A_u16Value){
+    switch (A_u8PortID) {
+        case GPIO_A:
+            GPIOA->ODR = A_u16Value;
+            break;
+        case GPIO_B:
+            GPIOB->ODR = A_u16Value;
+            break;
+        case GPIO_C:
+            GPIOC->ODR = A_u16Value;
+            break;
+        default:
+            // Handle error
+            break;
+    }
+}
+
+void MGPIO_vSetLeastByteInPort( u8 A_u8PortID , u8 A_u8Value){
+    switch (A_u8PortID) {
+        case GPIO_A:
+            GPIOA->ODR &= ~(0x00FF);          // clear first byte only
+            GPIOA->ODR |= A_u8Value;
+            break;
+        case GPIO_B:
+            GPIOB->ODR &= ~(0x00FF);          // clear first byte only
+            GPIOB->ODR |= A_u8Value;
+            break;
+        case GPIO_C:
+            GPIOC->ODR &= ~(0x00FF);          // clear first byte only
+            GPIOC->ODR |= A_u8Value;
+            break;
+        default:
+            // Handle error
+    
+            break;
+    }
+}
+
+void MGPIO_vSetMostByteInPort(u8 A_u8PortID , u8 A_u8Value){
+    switch (A_u8PortID) {
+        u16 highValue;
+        case GPIO_A:
+            GPIOA->ODR &= ~(0xFF00);          // clear second byte only
+            highValue = ( A_u8Value << 8 ) & 0xFF00;
+            GPIOA->ODR |= highValue;
+            break;
+        case GPIO_B:
+            GPIOB->ODR &= ~(0xFF00);          // clear second byte only
+            highValue = ( A_u8Value << 8 ) & 0xFF00;
+            GPIOB->ODR |= highValue;
+            break;
+        case GPIO_C:
+            GPIOC->ODR &= ~(0xFF00);          // clear second byte only
+            highValue = ( A_u8Value << 8 ) & 0xFF00;
+            GPIOC->ODR |= highValue;
+            break;
+        default:
+            // Handle error
+    
+            break;
+    }
+}
+
+
 void MGPIO_vPinInit(GPIOx_PinConfig_t* A_xPinCfg){
     MGPIO_vSetPinMode(A_xPinCfg->Port , A_xPinCfg->Pin , A_xPinCfg->Mode);
     MGPIO_vSetPinOutputType(A_xPinCfg->Port , A_xPinCfg->Pin , A_xPinCfg->OutputType);

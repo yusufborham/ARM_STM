@@ -15,6 +15,7 @@ RM := rm -rf
 -include system/src/cmsis/subdir.mk
 -include src/MCAL/RCC/subdir.mk
 -include src/MCAL/GPIO/subdir.mk
+-include src/HAL/SevenSegment/subdir.mk
 -include src/APP/subdir.mk
 -include subdir.mk
 -include objects.mk

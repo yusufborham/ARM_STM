@@ -90,5 +90,18 @@ void MRCC_vDisableClk(u8 A_u8BusID, u8 A_u8PeripheralID){
 		// Handle error
 		break;
 	}
+}
+void MRCC_vSetAPB1Prescaler(u8 A_u8Prescaler){
+	RCC->CFGR &= ~(0b111 << 10);			// clear the 3 bit field
+	RCC->CFGR |= (A_u8Prescaler << 10);		// set the new prescaler value
+}
 
+void MRCC_vSetAPB2Prescaler(u8 A_u8Prescaler){
+	RCC->CFGR &= ~(0b111 << 13);			// clear the 3 bit field
+	RCC->CFGR |= (A_u8Prescaler << 13);		// set the new prescaler value
+}
+
+void MRCC_vSetAHBPrescaler(u8 A_u8Prescaler){
+	RCC->CFGR &= ~(0b1111 << 4);			// clear the 4 bit field
+	RCC->CFGR |= (A_u8Prescaler << 4);		// set the new prescaler value
 }

@@ -106,6 +106,7 @@ void MGPIO_vSetPinAlternateFunction(u8 A_u8PortID, u8 A_u8PinID, u8 A_u8Alternat
 
 void MGPIO_vSetPinValue(u8 A_u8PortID, u8 A_u8PinID, u8 A_u8Value);                         // set pin high or low
 u8 MGPIO_u8GetPinValue(u8 A_u8PortID, u8 A_u8PinID);                                        // get pin value (high or low)
+void MGPIO_vTogglePinValue(u8 A_u8PortID, u8 A_u8PinID);
 
 void MGPIO_vPinInit(GPIOx_PinConfig_t* A_xPinCfg);
 

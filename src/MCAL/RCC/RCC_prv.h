@@ -78,13 +78,17 @@ typedef struct {
 #define USART2EN       17
 #define I2C1EN         21
 #define I2C2EN         22
-#define I2C3EN         23
+#define I2C3EN         23 
 #define PWREN          28
 
 #define TIM1EN         0
 #define USART1EN       4
 #define USART6EN       5
 #define ADC1EN         8
+#define SDIOEN         11
+#define SPI1EN         12
+#define SPI4EN         13
+#define SYSCFGEN       14
 #define TIM9EN         16
 #define TIM10EN        17
 #define TIM11EN        18

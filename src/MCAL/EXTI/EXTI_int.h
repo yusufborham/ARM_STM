@@ -15,5 +15,6 @@ void MEXTI_vDisableExternalInterruptLine(u8 A_u8PinID);
 void MEXTI_vSetTriggerCondition(u8 A_u8PinID, u8 A_u8TriggerCondition);
 u8 MEXTI_u8GetPendingFlag(u8 A_u8PinID);
 void MEXTI_vClearPendingFlag(u8 A_u8PinID);
+void MEXTI_vSetCallBackFunction(u8 A_u8PinID , void(*A_fpHandler)(void));
 
 #endif

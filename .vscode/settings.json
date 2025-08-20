@@ -61,6 +61,7 @@
     "exceptionhandlers.h": "c",
     "exti_prv.h": "c",
     "exti_cfg.h": "c",
-    "bit_math.h": "c"
+    "bit_math.h": "c",
+    "std_types.h": "c"
   }
 }

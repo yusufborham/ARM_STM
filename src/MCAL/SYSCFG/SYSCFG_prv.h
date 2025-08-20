@@ -1,14 +1,14 @@
-#ifndef SYSCGF_PRV_H
-#define SYSCGF_PRV_H
+#ifndef SYSCFG_PRV_H
+#define SYSCFG_PRV_H
 
 #include "../../LIB/STD_TYPES.h"
 #include "../../LIB/BIT_MATH.h"
 
 #define SYSCFG_BASE_ADDRESS 0x40013800
 
-#define SYSCGF_REG_INDEX(pin)   ((pin) / 4)
-#define SYSCGF_NIBBLE_POS(pin)  (((pin) % 4) * 4)
-#define SYSCGF_CLEAR_MASK(pin)  (0xF << SYSCGF_NIBBLE_POS(pin))
+#define SYSCFG_REG_INDEX(pin)   ((pin) / 4)
+#define SYSCFG_NIBBLE_POS(pin)  (((pin) % 4) * 4)
+#define SYSCFG_CLEAR_MASK(pin)  (0xF << SYSCFG_NIBBLE_POS(pin))
 
 
 
@@ -20,6 +20,6 @@ typedef struct {
     volatile u32 CMPCR;
 } SYSCFG_MemMap_t ;
 
-#define SYSCGF  (( volatile SYSCFG_MemMap_t*)SYSCFG_BASE_ADDRESS)
+#define SYSCFG  (( volatile SYSCFG_MemMap_t*)SYSCFG_BASE_ADDRESS)
 
 #endif

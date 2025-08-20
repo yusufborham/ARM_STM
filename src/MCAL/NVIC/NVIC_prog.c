@@ -59,3 +59,4 @@ void MNVIC_vConfigGroupPriority(NVIC_PriorityGroup_t A_u8GroupPriority){
     G_u8GroupPriority = A_u8GroupPriority ; 
     SCB_AIRCR = LockValueForAIRCR | (A_u8GroupPriority << 8 ) ;
 }
+

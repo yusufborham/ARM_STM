@@ -20,7 +20,7 @@ typedef enum
     EXTI22_IRQn              = 3,   // RTC Wakeup via EXTI Line 22
     FLASH_IRQn               = 4,   // Flash global
     RCC_IRQn                 = 5,   // RCC global
-    EXTI0_IRQ               = 6,   // EXTI Line 0
+    EXTI0_IRQn               = 6,   // EXTI Line 0
     EXTI1_IRQn               = 7,   // EXTI Line 1
     EXTI2_IRQn               = 8,   // EXTI Line 2
     EXTI3_IRQn               = 9,   // EXTI Line 3

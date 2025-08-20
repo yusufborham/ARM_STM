@@ -33,7 +33,7 @@ src/MCAL/EXTI \
 src/MCAL/GPIO \
 src/MCAL/NVIC \
 src/MCAL/RCC \
-src/MCAL/SYSCGF \
+src/MCAL/SYSCFG \
 system/src/cmsis \
 system/src/cortexm \
 system/src/diag \

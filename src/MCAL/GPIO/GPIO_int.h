@@ -1,31 +1,47 @@
-/*
- * GPIO_int.h
+/**
+ * @file GPIO_int.h
+ * @brief General Purpose Input/Output (GPIO) Driver Interface
  *
- *  Created on: Aug 17, 2025
- *      Author: yusuf
+ * This module provides an abstraction layer for configuring 
+ * and controlling GPIO pins and ports on ARM Cortex-M MCUs.
+ * It allows users to set pin modes, output types, speeds, 
+ * pull-up/pull-down resistors, alternate functions, and 
+ * perform basic read/write/toggle operations.
+ *
+ * @date Aug 17, 2025
+ * @author Yusuf
  */
-#include "../../LIB/STD_TYPES.h"
-#include "../../LIB/BIT_MATH.h"
 
 #ifndef MCAL_GPIO_GPIO_INT_H_
 #define MCAL_GPIO_GPIO_INT_H_
 
+#include "../../LIB/STD_TYPES.h"
+#include "../../LIB/BIT_MATH.h"
+
+/*-----------------------------------------------------------------------------------*/
+/*                               Data Structures                                     */
+/*-----------------------------------------------------------------------------------*/
+
+/**
+ * @brief GPIO Pin Configuration structure.
+ *
+ * Used with @ref MGPIO_vPinInit to configure a single GPIO pin.
+ */
 typedef struct 
 {
-    u8 Port ;
-    u8 Pin ;
-    u8 Mode ;
-    u8 OutputType ;
-    u8 PullType ;
-    u8 Speed ;
-    u8 AltFunc ;
-} GPIOx_PinConfig_t ;
+    u8 Port;        /**< GPIO port ID (e.g., GPIO_A, GPIO_B) */
+    u8 Pin;         /**< GPIO pin number (0–15) */
+    u8 Mode;        /**< Pin mode: input, output, alternate, analog */
+    u8 OutputType;  /**< Output type: push-pull or open-drain */
+    u8 PullType;    /**< Pull-up/pull-down configuration */
+    u8 Speed;       /**< Output speed: low, medium, high, very high */
+    u8 AltFunc;     /**< Alternate function number (AF0–AF15) */
+} GPIOx_PinConfig_t;
 
+/*-----------------------------------------------------------------------------------*/
+/*                               GPIO Pin IDs                                        */
+/*-----------------------------------------------------------------------------------*/
 
-// Don't change the values here //
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// GPIO Pin IDs
 #define GPIO_PIN_0   0
 #define GPIO_PIN_1   1
 #define GPIO_PIN_2   2
@@ -43,28 +59,43 @@ typedef struct
 #define GPIO_PIN_14  14
 #define GPIO_PIN_15  15
 
-// GPIO Mode options
-#define GPIO_MODE_INPUT         0x00U
-#define GPIO_MODE_OUTPUT        0x01U
-#define GPIO_MODE_ALTERNATE     0x02U
-#define GPIO_MODE_ANALOG        0x03U
+/*-----------------------------------------------------------------------------------*/
+/*                               GPIO Modes                                          */
+/*-----------------------------------------------------------------------------------*/
 
-// GPIO Output Type options
-#define GPIO_OTYPE_PP           0x00U  // Push-Pull
-#define GPIO_OTYPE_OD           0x01U  // Open-Drain
+#define GPIO_MODE_INPUT         0x00U  /**< Input mode */
+#define GPIO_MODE_OUTPUT        0x01U  /**< General purpose output mode */
+#define GPIO_MODE_ALTERNATE     0x02U  /**< Alternate function mode */
+#define GPIO_MODE_ANALOG        0x03U  /**< Analog mode */
 
-// GPIO Speed options
+/*-----------------------------------------------------------------------------------*/
+/*                               Output Type                                         */
+/*-----------------------------------------------------------------------------------*/
+
+#define GPIO_OTYPE_PP           0x00U  /**< Push-pull output */
+#define GPIO_OTYPE_OD           0x01U  /**< Open-drain output */
+
+/*-----------------------------------------------------------------------------------*/
+/*                               Output Speed                                        */
+/*-----------------------------------------------------------------------------------*/
+
 #define GPIO_SPEED_LOW          0x00U
 #define GPIO_SPEED_MEDIUM       0x01U
 #define GPIO_SPEED_HIGH         0x02U
 #define GPIO_SPEED_VERY_HIGH    0x03U
 
-// GPIO Pull-Up/Pull-Down options
-#define GPIO_PUPD_NONE          0x00U
-#define GPIO_PUPD_PULL_UP       0x01U
-#define GPIO_PUPD_PULL_DOWN     0x02U
+/*-----------------------------------------------------------------------------------*/
+/*                               Pull-Up / Pull-Down                                 */
+/*-----------------------------------------------------------------------------------*/
 
-// GPIO Alternate Function options
+#define GPIO_PUPD_NONE          0x00U  /**< No pull-up or pull-down */
+#define GPIO_PUPD_PULL_UP       0x01U  /**< Enable pull-up resistor */
+#define GPIO_PUPD_PULL_DOWN     0x02U  /**< Enable pull-down resistor */
+
+/*-----------------------------------------------------------------------------------*/
+/*                               Alternate Function IDs                              */
+/*-----------------------------------------------------------------------------------*/
+
 #define GPIO_AF0                0x00U
 #define GPIO_AF1                0x01U
 #define GPIO_AF2                0x02U
@@ -82,36 +113,85 @@ typedef struct
 #define GPIO_AF14               0x0EU
 #define GPIO_AF15               0x0FU
 
-#define GPIO_PIN_HIGH          1U
-#define GPIO_PIN_LOW           0U
+/*-----------------------------------------------------------------------------------*/
+/*                               Pin Logic Levels                                    */
+/*-----------------------------------------------------------------------------------*/
 
-///////////////////////////////////////////////////////////////////////////////////////////
+#define GPIO_PIN_HIGH           1U
+#define GPIO_PIN_LOW            0U
 
-// PORT IDs
+/*-----------------------------------------------------------------------------------*/
+/*                               Port IDs                                            */
+/*-----------------------------------------------------------------------------------*/
+
 #define GPIO_A 0
 #define GPIO_B 1
 #define GPIO_C 2
 #define GPIO_D 3
 
+/*-----------------------------------------------------------------------------------*/
+/*                               Function Prototypes                                 */
+/*-----------------------------------------------------------------------------------*/
 
-void MGPIO_vSetPinMode(u8 A_u8PortID, u8 A_u8PinID, u8 A_u8Mode);                           // analog mode, input mode, output mode, alternate function mode
+/**
+ * @brief Set the mode of a specific pin.
+ */
+void MGPIO_vSetPinMode(u8 A_u8PortID, u8 A_u8PinID, u8 A_u8Mode);
 
-void MGPIO_vSetPinOutputType(u8 A_u8PortID, u8 A_u8PinID, u8 A_u8OutputType);               // push-pull, open-drain
+/**
+ * @brief Set the output type of a specific pin (Push-pull / Open-drain).
+ */
+void MGPIO_vSetPinOutputType(u8 A_u8PortID, u8 A_u8PinID, u8 A_u8OutputType);
 
-void MGPIO_vSetPinSpeed(u8 A_u8PortID, u8 A_u8PinID, u8 A_u8Speed);                         // low speed, medium speed, high speed, very high speed
+/**
+ * @brief Set the speed of a specific pin.
+ */
+void MGPIO_vSetPinSpeed(u8 A_u8PortID, u8 A_u8PinID, u8 A_u8Speed);
 
-void MGPIO_vSetPinPullUpDown(u8 A_u8PortID, u8 A_u8PinID, u8 A_u8PullUpDown);               // no pull-up/pull-down, pull-up, pull-down
+/**
+ * @brief Configure pull-up or pull-down resistor for a pin.
+ */
+void MGPIO_vSetPinPullUpDown(u8 A_u8PortID, u8 A_u8PinID, u8 A_u8PullUpDown);
 
-void MGPIO_vSetPinAlternateFunction(u8 A_u8PortID, u8 A_u8PinID, u8 A_u8AlternateFunction); // set alternate function for the pin
+/**
+ * @brief Set alternate function number for a pin.
+ */
+void MGPIO_vSetPinAlternateFunction(u8 A_u8PortID, u8 A_u8PinID, u8 A_u8AlternateFunction);
 
-void MGPIO_vSetPinValue(u8 A_u8PortID, u8 A_u8PinID, u8 A_u8Value);                         // set pin high or low
-u8 MGPIO_u8GetPinValue(u8 A_u8PortID, u8 A_u8PinID);                                        // get pin value (high or low)
+/**
+ * @brief Set the logical value (HIGH/LOW) of a pin.
+ */
+void MGPIO_vSetPinValue(u8 A_u8PortID, u8 A_u8PinID, u8 A_u8Value);
+
+/**
+ * @brief Get the logical value of a pin.
+ * @return 1 if HIGH, 0 if LOW.
+ */
+u8 MGPIO_u8GetPinValue(u8 A_u8PortID, u8 A_u8PinID);
+
+/**
+ * @brief Toggle the logical value of a pin.
+ */
 void MGPIO_vTogglePinValue(u8 A_u8PortID, u8 A_u8PinID);
 
+/**
+ * @brief Initialize a GPIO pin using a configuration structure.
+ */
 void MGPIO_vPinInit(GPIOx_PinConfig_t* A_xPinCfg);
 
+/**
+ * @brief Set the output value of an entire port.
+ */
 void MGPIO_vSetAllPort(u8 A_u8PortID, u16 A_u16Value);
-void MGPIO_vSetLeastByteInPort( u8 A_u8PortID , u8 A_u8Value);                              // set least significant byte of the port
-void MGPIO_vSetMostByteInPort(u8 A_u8PortID , u8 A_u8Value);
+
+/**
+ * @brief Set the least significant byte (LSB) of a port.
+ */
+void MGPIO_vSetLeastByteInPort(u8 A_u8PortID, u8 A_u8Value);
+
+/**
+ * @brief Set the most significant byte (MSB) of a port.
+ */
+void MGPIO_vSetMostByteInPort(u8 A_u8PortID, u8 A_u8Value);
 
 #endif /* MCAL_GPIO_GPIO_INT_H_ */

@@ -16,7 +16,11 @@ src/APP/main.o: ../src/APP/main.c ../src/APP/../MCAL/RCC/RCC_int.h \
  ../src/APP/../HAL/SevenSegment/../../MCAL/RCC/RCC_int.h \
  e:\iti\ arm\ course\workspace2\arm_stm\src\lib\std_types.h \
  ../src/APP/../HAL/SevenSegment/../../MCAL/RCC/RCC_prv.h \
- ../src/APP/../HAL/SevenSegment/SevSeg_prv.h
+ ../src/APP/../HAL/SevenSegment/SevSeg_prv.h \
+ ../src/APP/../MCAL/NVIC/NVIC_int.h \
+ ../src/APP/../MCAL/NVIC/../../LIB/STD_TYPES.h \
+ ../src/APP/../MCAL/NVIC/../../LIB/BIT_MATH.h \
+ ../src/APP/../MCAL/NVIC/NVIC_prv.h
 
 ../src/APP/../MCAL/RCC/RCC_int.h:
 
@@ -59,3 +63,11 @@ e:\iti\ arm\ course\workspace2\arm_stm\src\lib\std_types.h:
 ../src/APP/../HAL/SevenSegment/../../MCAL/RCC/RCC_prv.h:
 
 ../src/APP/../HAL/SevenSegment/SevSeg_prv.h:
+
+../src/APP/../MCAL/NVIC/NVIC_int.h:
+
+../src/APP/../MCAL/NVIC/../../LIB/STD_TYPES.h:
+
+../src/APP/../MCAL/NVIC/../../LIB/BIT_MATH.h:
+
+../src/APP/../MCAL/NVIC/NVIC_prv.h:

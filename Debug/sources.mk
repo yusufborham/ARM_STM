@@ -29,8 +29,11 @@ CPP_DEPS :=
 SUBDIRS := \
 src/APP \
 src/HAL/SevenSegment \
+src/MCAL/EXTI \
 src/MCAL/GPIO \
+src/MCAL/NVIC \
 src/MCAL/RCC \
+src/MCAL/SYSCGF \
 system/src/cmsis \
 system/src/cortexm \
 system/src/diag \

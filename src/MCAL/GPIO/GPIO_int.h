@@ -109,7 +109,7 @@ u8 MGPIO_u8GetPinValue(u8 A_u8PortID, u8 A_u8PinID);                            
 
 void MGPIO_vPinInit(GPIOx_PinConfig_t* A_xPinCfg);
 
-void MGPIO_vSetAllPort(u8 A_u8PortID, u16 A_u8Value);
+void MGPIO_vSetAllPort(u8 A_u8PortID, u16 A_u16Value);
 void MGPIO_vSetLeastByteInPort( u8 A_u8PortID , u8 A_u8Value);                              // set least significant byte of the port
 void MGPIO_vSetMostByteInPort(u8 A_u8PortID , u8 A_u8Value);
 

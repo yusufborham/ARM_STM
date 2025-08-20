@@ -57,6 +57,10 @@
   "C_Cpp_Runner.useLinkTimeOptimization": false,
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
   "files.associations": {
-    "gpio_prv.h": "c"
+    "gpio_prv.h": "c",
+    "exceptionhandlers.h": "c",
+    "exti_prv.h": "c",
+    "exti_cfg.h": "c",
+    "bit_math.h": "c"
   }
 }

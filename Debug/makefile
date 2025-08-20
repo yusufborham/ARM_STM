@@ -13,8 +13,11 @@ RM := rm -rf
 -include system/src/diag/subdir.mk
 -include system/src/cortexm/subdir.mk
 -include system/src/cmsis/subdir.mk
+-include src/MCAL/SYSCGF/subdir.mk
 -include src/MCAL/RCC/subdir.mk
+-include src/MCAL/NVIC/subdir.mk
 -include src/MCAL/GPIO/subdir.mk
+-include src/MCAL/EXTI/subdir.mk
 -include src/HAL/SevenSegment/subdir.mk
 -include src/APP/subdir.mk
 -include subdir.mk

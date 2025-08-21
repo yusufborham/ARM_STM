@@ -49,7 +49,7 @@ int main (void){
 	MRCC_vOutputClockOnHardwarePin( MCO1_PRESCALER_DIVIDE_1 , MCO1_SOURCE_HSE);
 
 	MSYSTICK_vChooseClockSource(SYSTICK_CLK_SOURCE_AHB_DIV_8);
-	MSYSTICK_vSetReloadValue(3125000);
+	// MSYSTICK_vSetReloadValue(3125000);
 
 	// MEXTI_vSetCallBackFunction(GPIO_PIN_0, handler);
 
@@ -71,18 +71,16 @@ int main (void){
 	MSYSTICK_vSetCurrentValue(0);
 	MSYSTICK_vEnableTimer();
 
+	MSYSTICK_vSetIntervalMulti( 2000 , handler);
+
 	while(1){
-		if (MSYSTICK_u8GetFlag()) {
-			counter = (counter+1)%10;
-			MSYSTICK_vSetCurrentValue(3125000);
-			MGPIO_vSetPinValue(GPIO_A, GPIO_PIN_7, GPIO_PIN_HIGH);
-		}
+	
 		HSevenSeg_vDisplayNumber(&seven_seg_cfg , counter) ;
-		MGPIO_vSetPinValue(GPIO_A, GPIO_PIN_7, GPIO_PIN_LOW);
+		
 	}
 	return 0;
 }
 
-// void handler(void){
-	
-// }
+void handler(void){
+	counter = (counter+1)%10;
+}

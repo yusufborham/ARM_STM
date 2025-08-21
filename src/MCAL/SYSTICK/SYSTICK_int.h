@@ -98,4 +98,26 @@ u32 MSYSTICK_u32GetElapsedTime();
  */
 u32 MSYSTICK_u32GetRemainingTime();
 
+/*
+ * @brief Set a delay in milliseconds using SysTick.
+ * @param A_u32Delay Delay duration in milliseconds.
+ */
+void MSYSTICK_vSetDelayMS(u32 A_u32Delay);
+
+/*
+ * @brief Set a periodic interval using SysTick.
+ * @param A_u32Interval Interval duration in milliseconds.
+ * @param A_pvCallBack Pointer to the callback function to be called on interval.
+ */
+void MSYSTICK_vSetIntervalMulti( u32 A_u32Interval , void (*A_pvCallBack)(void));
+
+/*
+ * @brief Set a single interval using SysTick.
+ * @param A_u32Interval Interval duration in milliseconds.
+ * @param A_pvCallBack Pointer to the callback function to be called on interval.
+ */
+void MSYSTICK_vSetIntervalSingle(u32 A_u32Interval, void (*A_pvCallBack)(void));
+
+
+
 #endif /* SYSTICK_INT_H */

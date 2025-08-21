@@ -34,6 +34,7 @@ src/MCAL/GPIO \
 src/MCAL/NVIC \
 src/MCAL/RCC \
 src/MCAL/SYSCFG \
+src/MCAL/SYSTICK \
 system/src/cmsis \
 system/src/cortexm \
 system/src/diag \

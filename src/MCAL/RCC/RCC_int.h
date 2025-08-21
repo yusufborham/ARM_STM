@@ -69,6 +69,24 @@ typedef enum {
     AHB_PRESCALER_DIVIDE_512  = 15  /**< SYSCLK divided by 512 */
 } AHB_Prescaler_t;
 
+/*
+ * MCO1 Clock Source Options
+ */
+typedef enum {
+    MCO1_SOURCE_HSI   = 0,
+    MCO1_SOURCE_LSE   = 1,
+    MCO1_SOURCE_HSE   = 2,
+    MCO1_SOURCE_PLL   = 3
+} MCO1_Source_t;
+
+typedef enum {
+    MCO1_PRESCALER_DIVIDE_1   = 0,
+    MCO1_PRESCALER_DIVIDE_2   = 4,
+    MCO1_PRESCALER_DIVIDE_4   = 5,
+    MCO1_PRESCALER_DIVIDE_8   = 6,
+    MCO1_PRESCALER_DIVIDE_16  = 7
+} MCO1_Prescaler_t;
+
 /*==============================================================================
  * Peripheral Identifiers
  *============================================================================*/
@@ -131,5 +149,15 @@ void MRCC_vSetAPB2Prescaler(u8 A_u8Prescaler);
  * @param A_u8Prescaler  One of @ref AHB_Prescaler_t values
  */
 void MRCC_vSetAHBPrescaler(u8 A_u8Prescaler);
-
+/*
+ * @brief Configures the output clock on a hardware pin.
+ *
+ * @param A_u8MCO1_PRESCALER  One of @ref AHB_Prescaler_t values
+ * @param A_u8MCO1_SOURCE     One of the clock source options
+ * HSI
+ * LSE
+ * HSE
+ * PLL
+ */
+void MRCC_vOutputClockOnHardwarePin(u8 A_u8MCO1_PRESCALER , u8 A_u8MCO1_SOURCE);
 #endif /* MCAL_RCC_RCC_INT_H_ */

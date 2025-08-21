@@ -105,3 +105,12 @@ void MRCC_vSetAHBPrescaler(u8 A_u8Prescaler){
 	RCC->CFGR &= ~(0b1111 << 4);			// clear the 4 bit field
 	RCC->CFGR |= (A_u8Prescaler << 4);		// set the new prescaler value
 }
+
+void MRCC_vOutputClockOnHardwarePin(u8 A_u8MCO1_PRESCALER , u8 A_u8MCO1_SOURCE){
+	// Set the MCO1 source and prescaler
+	RCC->CFGR &= ~(0b111 << 24);				// Clear MCO1 bits
+	RCC->CFGR |= (A_u8MCO1_PRESCALER << 24); 	// Set MCO1 PRESCALER
+
+	RCC->CFGR &= ~(0b11 << 21); 				// Clear MCO1 source bits
+	RCC->CFGR |= ( A_u8MCO1_SOURCE << 21); 		// Set MCO1 source
+}

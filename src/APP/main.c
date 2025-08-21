@@ -14,30 +14,44 @@
 #include "../MCAL/EXTI/EXTI_prv.h"
 #include "../MCAL/SYSCFG/SYSCFG_int.h"
 #include "../MCAL/SYSCFG/SYSCFG_prv.h"
+#include "../MCAL/SYSTICK/SYSTICK_int.h"
+#include "../MCAL/SYSTICK/SYSTICK_prv.h"
+
 
 void handler(void) ; 
 
 #define DELAY_MS(d) for(unsigned long i = 0 ; i < (d * 4000) ; i++ ){asm("NOP");}
 
-volatile u8 flag = 0;
+volatile u32 counter = 0;
 
 int main (void){
+	// enable clock for GPIOA, GPIOB and SYSCFG
 	MRCC_vInit();
 	MRCC_vEnableClk(RCC_AHB1, GPIOAEN);
 	MRCC_vEnableClk(RCC_AHB1, GPIOBEN);
 	MRCC_vEnableClk(RCC_APB2, SYSCFGEN);
- 
-	// Seven_Segment_config_t seven_seg_cfg = {.Port = GPIO_A, .Pin_A = GPIO_PIN_0, .Pin_B = GPIO_PIN_1, .Pin_C = GPIO_PIN_2, .Pin_D = GPIO_PIN_3, .Pin_E = GPIO_PIN_4, .Pin_F = GPIO_PIN_5, .Pin_G = GPIO_PIN_6};
 
-	// HSevenSeg_vInitPins(&seven_seg_cfg);
+	MRCC_vSetAHBPrescaler(AHB_PRESCALER_DIVIDE_512);
 
-	GPIOx_PinConfig_t led = {.Port = GPIO_A , .Pin = GPIO_PIN_0 , .Mode = GPIO_MODE_OUTPUT , .OutputType = GPIO_OTYPE_PP , .PullType = GPIO_PUPD_NONE , .Speed = GPIO_SPEED_LOW , .AltFunc = 0};
-	MGPIO_vPinInit(&led);
+	Seven_Segment_config_t seven_seg_cfg = {.Port = GPIO_A, .Pin_A = GPIO_PIN_0, .Pin_B = GPIO_PIN_1, .Pin_C = GPIO_PIN_2, .Pin_D = GPIO_PIN_3, .Pin_E = GPIO_PIN_4, .Pin_F = GPIO_PIN_5, .Pin_G = GPIO_PIN_6};
+	HSevenSeg_vInitPins(&seven_seg_cfg);
 
 	GPIOx_PinConfig_t button = {.Port = GPIO_B , .Pin = GPIO_PIN_0 , .Mode = GPIO_MODE_INPUT  ,  .PullType = GPIO_PUPD_PULL_UP , .Speed = GPIO_SPEED_LOW };
 	MGPIO_vPinInit(&button);
 
-	MEXTI_vSetCallBackFunction(GPIO_PIN_0, handler);
+	GPIOx_PinConfig_t led = {.Port = GPIO_A , .Pin = GPIO_PIN_7 , .Mode = GPIO_MODE_OUTPUT , .OutputType = GPIO_OTYPE_PP , .PullType = GPIO_PUPD_NONE , .Speed = GPIO_SPEED_LOW };
+	MGPIO_vPinInit(&led);
+
+	// let pin A8 alternate function pin for the MCO1
+	GPIOx_PinConfig_t mco1 = {.Port = GPIO_A, .Pin = GPIO_PIN_8, .Mode = GPIO_MODE_ALTERNATE, .PullType = GPIO_PUPD_NONE, .Speed = GPIO_SPEED_VERY_HIGH , .AltFunc = 0};
+	MGPIO_vPinInit(&mco1);
+
+	MRCC_vOutputClockOnHardwarePin( MCO1_PRESCALER_DIVIDE_1 , MCO1_SOURCE_HSE);
+
+	MSYSTICK_vChooseClockSource(SYSTICK_CLK_SOURCE_AHB_DIV_8);
+	MSYSTICK_vSetReloadValue(-1);
+
+	// MEXTI_vSetCallBackFunction(GPIO_PIN_0, handler);
 
 	// CONFIGURE NVIC
 	MNVIC_vEnableInterrupt(EXTI0_IRQn);
@@ -54,21 +68,21 @@ int main (void){
 
 	MGPIO_vSetPinValue(GPIO_A, GPIO_PIN_0, GPIO_PIN_LOW);
 
-	DELAY_MS(1000);
-
-	MNVIC_vSetPendingFlag(EXTI0_IRQn);
+	MSYSTICK_vSetCurrentValue(0);
+	MSYSTICK_vEnableTimer();
 
 	while(1){
-		// MGPIO_vSetPinValue(GPIO_A, GPIO_PIN_0, GPIO_PIN_HIGH);
-		// DELAY_MS(1000);
-		// MGPIO_vSetPinValue(GPIO_A, GPIO_PIN_0, GPIO_PIN_LOW);
-		// MNVIC_vSetPendingFlag(EXTI0_IRQn);
-		// DELAY_MS(2000);
+		if (MSYSTICK_u8GetFlag()) {
+			counter = (counter+1)%10;
+			MSYSTICK_vSetCurrentValue(-1);
+			MGPIO_vSetPinValue(GPIO_A, GPIO_PIN_7, GPIO_PIN_HIGH);
+		}
+		HSevenSeg_vDisplayNumber(&seven_seg_cfg , counter) ;
+		MGPIO_vSetPinValue(GPIO_A, GPIO_PIN_7, GPIO_PIN_LOW);
 	}
 	return 0;
 }
 
-void handler(void){
-	MGPIO_vTogglePinValue(GPIO_A, GPIO_PIN_0);
-	DELAY_MS(200);
-}
+// void handler(void){
+	
+// }

@@ -31,7 +31,7 @@ int main (void){
 	MRCC_vEnableClk(RCC_AHB1, GPIOBEN);
 	MRCC_vEnableClk(RCC_APB2, SYSCFGEN);
 
-	MRCC_vSetAHBPrescaler(AHB_PRESCALER_DIVIDE_512);
+	MRCC_vSetAHBPrescaler(AHB_PRESCALER_DIVIDE_1);
 
 	Seven_Segment_config_t seven_seg_cfg = {.Port = GPIO_A, .Pin_A = GPIO_PIN_0, .Pin_B = GPIO_PIN_1, .Pin_C = GPIO_PIN_2, .Pin_D = GPIO_PIN_3, .Pin_E = GPIO_PIN_4, .Pin_F = GPIO_PIN_5, .Pin_G = GPIO_PIN_6};
 	HSevenSeg_vInitPins(&seven_seg_cfg);
@@ -49,7 +49,7 @@ int main (void){
 	MRCC_vOutputClockOnHardwarePin( MCO1_PRESCALER_DIVIDE_1 , MCO1_SOURCE_HSE);
 
 	MSYSTICK_vChooseClockSource(SYSTICK_CLK_SOURCE_AHB_DIV_8);
-	MSYSTICK_vSetReloadValue(-1);
+	MSYSTICK_vSetReloadValue(3125000);
 
 	// MEXTI_vSetCallBackFunction(GPIO_PIN_0, handler);
 
@@ -74,7 +74,7 @@ int main (void){
 	while(1){
 		if (MSYSTICK_u8GetFlag()) {
 			counter = (counter+1)%10;
-			MSYSTICK_vSetCurrentValue(-1);
+			MSYSTICK_vSetCurrentValue(3125000);
 			MGPIO_vSetPinValue(GPIO_A, GPIO_PIN_7, GPIO_PIN_HIGH);
 		}
 		HSevenSeg_vDisplayNumber(&seven_seg_cfg , counter) ;

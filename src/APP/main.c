@@ -18,7 +18,8 @@
 #include "../MCAL/SYSTICK/SYSTICK_prv.h"
 
 
-void handler(void) ; 
+void vIncrementCounter(void);
+void vDecrementCounter(void);
 
 #define DELAY_MS(d) for(unsigned long i = 0 ; i < (d * 4000) ; i++ ){asm("NOP");}
 
@@ -36,42 +37,51 @@ int main (void){
 	Seven_Segment_config_t seven_seg_cfg = {.Port = GPIO_A, .Pin_A = GPIO_PIN_0, .Pin_B = GPIO_PIN_1, .Pin_C = GPIO_PIN_2, .Pin_D = GPIO_PIN_3, .Pin_E = GPIO_PIN_4, .Pin_F = GPIO_PIN_5, .Pin_G = GPIO_PIN_6};
 	HSevenSeg_vInitPins(&seven_seg_cfg);
 
-	GPIOx_PinConfig_t button = {.Port = GPIO_B , .Pin = GPIO_PIN_0 , .Mode = GPIO_MODE_INPUT  ,  .PullType = GPIO_PUPD_PULL_UP , .Speed = GPIO_SPEED_LOW };
-	MGPIO_vPinInit(&button);
+	GPIOx_PinConfig_t buttonUP = {.Port = GPIO_B , .Pin = GPIO_PIN_0 , .Mode = GPIO_MODE_INPUT  ,  .PullType = GPIO_PUPD_PULL_UP , .Speed = GPIO_SPEED_LOW };
+	MGPIO_vPinInit(&buttonUP);
 
-	GPIOx_PinConfig_t led = {.Port = GPIO_A , .Pin = GPIO_PIN_7 , .Mode = GPIO_MODE_OUTPUT , .OutputType = GPIO_OTYPE_PP , .PullType = GPIO_PUPD_NONE , .Speed = GPIO_SPEED_LOW };
-	MGPIO_vPinInit(&led);
+	GPIOx_PinConfig_t buttonDOWN = {.Port = GPIO_B , .Pin = GPIO_PIN_1 , .Mode = GPIO_MODE_INPUT  ,  .PullType = GPIO_PUPD_PULL_UP , .Speed = GPIO_SPEED_LOW };
+	MGPIO_vPinInit(&buttonDOWN);
 
-	// let pin A8 alternate function pin for the MCO1
-	GPIOx_PinConfig_t mco1 = {.Port = GPIO_A, .Pin = GPIO_PIN_8, .Mode = GPIO_MODE_ALTERNATE, .PullType = GPIO_PUPD_NONE, .Speed = GPIO_SPEED_VERY_HIGH , .AltFunc = 0};
-	MGPIO_vPinInit(&mco1);
+	// GPIOx_PinConfig_t led = {.Port = GPIO_A , .Pin = GPIO_PIN_7 , .Mode = GPIO_MODE_OUTPUT , .OutputType = GPIO_OTYPE_PP , .PullType = GPIO_PUPD_NONE , .Speed = GPIO_SPEED_LOW };
+	// MGPIO_vPinInit(&led);
 
-	MRCC_vOutputClockOnHardwarePin( MCO1_PRESCALER_DIVIDE_1 , MCO1_SOURCE_HSE);
+	// // let pin A8 alternate function pin for the MCO1
+	// GPIOx_PinConfig_t mco1 = {.Port = GPIO_A, .Pin = GPIO_PIN_8, .Mode = GPIO_MODE_ALTERNATE, .PullType = GPIO_PUPD_NONE, .Speed = GPIO_SPEED_VERY_HIGH , .AltFunc = 0};
+	// MGPIO_vPinInit(&mco1);
 
-	MSYSTICK_vChooseClockSource(SYSTICK_CLK_SOURCE_AHB_DIV_8);
+	// MRCC_vOutputClockOnHardwarePin( MCO1_PRESCALER_DIVIDE_1 , MCO1_SOURCE_HSE);
+
+	// MSYSTICK_vChooseClockSource(SYSTICK_CLK_SOURCE_AHB_DIV_8);
 	// MSYSTICK_vSetReloadValue(3125000);
 
-	// MEXTI_vSetCallBackFunction(GPIO_PIN_0, handler);
+	MEXTI_vSetCallBackFunction(GPIO_PIN_0, vIncrementCounter);
+	MEXTI_vSetCallBackFunction(GPIO_PIN_1, vDecrementCounter);
 
 	// CONFIGURE NVIC
 	MNVIC_vEnableInterrupt(EXTI0_IRQn);
+	MNVIC_vEnableInterrupt(EXTI1_IRQn);
 	MNVIC_vConfigGroupPriority(NVIC_PriorityGroup16_SubGroup0);
     MNVIC_vSetPriority(EXTI0_IRQn, 6, 0);
+	MNVIC_vSetPriority(EXTI1_IRQn, 6, 0);
 
 	// Configure the correct Line 
 	MSYSCFG_vSetExternalInterruptLine(GPIO_B , GPIO_PIN_0);
+	MSYSCFG_vSetExternalInterruptLine(GPIO_B , GPIO_PIN_1);
 
 	// Set the trigger condition
 	MEXTI_vSetTriggerCondition(GPIO_PIN_0 , FALLING_EDGE_INTERRUPT_TRIGGER);
+	MEXTI_vSetTriggerCondition(GPIO_PIN_1 , FALLING_EDGE_INTERRUPT_TRIGGER);
 
 	MEXTI_vEnableExternalInterruptLine(GPIO_PIN_0);
+	MEXTI_vEnableExternalInterruptLine(GPIO_PIN_1);
 
-	MGPIO_vSetPinValue(GPIO_A, GPIO_PIN_0, GPIO_PIN_LOW);
+	// MGPIO_vSetPinValue(GPIO_A, GPIO_PIN_0, GPIO_PIN_LOW);
 
-	MSYSTICK_vSetCurrentValue(0);
-	MSYSTICK_vEnableTimer();
+	// MSYSTICK_vSetCurrentValue(0);
+	// MSYSTICK_vEnableTimer();
 
-	MSYSTICK_vSetIntervalMulti( 2000 , handler);
+	// MSYSTICK_vSetIntervalMulti( 2000 , handler);
 
 	while(1){
 	
@@ -81,6 +91,15 @@ int main (void){
 	return 0;
 }
 
-void handler(void){
-	counter = (counter+1)%10;
+
+void vIncrementCounter(void){
+	if (counter < 9)
+		counter = (counter+1)%10;
+	DELAY_MS(100);
+}
+
+void vDecrementCounter(void){
+	if (counter > 0)
+		counter = (counter-1)%10;
+	DELAY_MS(100);
 }

@@ -16,10 +16,9 @@
 #include "../MCAL/SYSCFG/SYSCFG_prv.h"
 #include "../MCAL/SYSTICK/SYSTICK_int.h"
 #include "../MCAL/SYSTICK/SYSTICK_prv.h"
+#include "../HAL/LedMatrix/ledmatrix_int.h"
+#include "../HAL/LedMatrix/ledmatrix_prv.h"
 
-
-void vIncrementCounter(void);
-void vDecrementCounter(void);
 
 #define DELAY_MS(d) for(unsigned long i = 0 ; i < (d * 4000) ; i++ ){asm("NOP");}
 
@@ -34,72 +33,73 @@ int main (void){
 
 	MRCC_vSetAHBPrescaler(AHB_PRESCALER_DIVIDE_1);
 
-	Seven_Segment_config_t seven_seg_cfg = {.Port = GPIO_A, .Pin_A = GPIO_PIN_0, .Pin_B = GPIO_PIN_1, .Pin_C = GPIO_PIN_2, .Pin_D = GPIO_PIN_3, .Pin_E = GPIO_PIN_4, .Pin_F = GPIO_PIN_5, .Pin_G = GPIO_PIN_6};
-	HSevenSeg_vInitPins(&seven_seg_cfg);
+	LedMatrix_config_t led_matrix_cfg = {
+		.Port1 = GPIO_A,
+		.RowPins = {
+			{ .Pin = GPIO_PIN_0 },
+			{ .Pin = GPIO_PIN_1 },
+			{ .Pin = GPIO_PIN_2 },
+			{ .Pin = GPIO_PIN_3 },
+			{ .Pin = GPIO_PIN_4 },
+			{ .Pin = GPIO_PIN_5 },
+			{ .Pin = GPIO_PIN_6 },
+			{ .Pin = GPIO_PIN_7 }
+		},
+		.Port2 = GPIO_B,
+		.ColPins = {
+			{ .Pin = GPIO_PIN_0 },
+			{ .Pin = GPIO_PIN_1 },
+			{ .Pin = GPIO_PIN_2 },
+			{ .Pin = GPIO_PIN_5 },
+			{ .Pin = GPIO_PIN_6 },  
+			{ .Pin = GPIO_PIN_7 },
+			{ .Pin = GPIO_PIN_8 },
+			{ .Pin = GPIO_PIN_9 }
+		}
+	};
 
-	GPIOx_PinConfig_t buttonUP = {.Port = GPIO_B , .Pin = GPIO_PIN_0 , .Mode = GPIO_MODE_INPUT  ,  .PullType = GPIO_PUPD_PULL_UP , .Speed = GPIO_SPEED_LOW };
-	MGPIO_vPinInit(&buttonUP);
+	HLedMatrix_vInitPins(&led_matrix_cfg);
 
-	GPIOx_PinConfig_t buttonDOWN = {.Port = GPIO_B , .Pin = GPIO_PIN_1 , .Mode = GPIO_MODE_INPUT  ,  .PullType = GPIO_PUPD_PULL_UP , .Speed = GPIO_SPEED_LOW };
-	MGPIO_vPinInit(&buttonDOWN);
+	// display character I  on 8*8 led matrix 
+	u8 led_matrix_buffer[6][8] = {
+		{0, 0, 231, 231, 231, 231, 0, 0},
+		{0, 0, 231, 231, 231, 231, 231, 231},
+		{0, 0, 231, 231, 231, 231, 0, 0},
+		{255, 195, 153, 153, 129, 153, 153, 255},
+		{126, 60, 24, 0, 36, 60, 60, 60},
+		{0, 0, 231, 231, 231, 231, 231, 231}
 
-	// GPIOx_PinConfig_t led = {.Port = GPIO_A , .Pin = GPIO_PIN_7 , .Mode = GPIO_MODE_OUTPUT , .OutputType = GPIO_OTYPE_PP , .PullType = GPIO_PUPD_NONE , .Speed = GPIO_SPEED_LOW };
-	// MGPIO_vPinInit(&led);
+	};
 
-	// // let pin A8 alternate function pin for the MCO1
-	// GPIOx_PinConfig_t mco1 = {.Port = GPIO_A, .Pin = GPIO_PIN_8, .Mode = GPIO_MODE_ALTERNATE, .PullType = GPIO_PUPD_NONE, .Speed = GPIO_SPEED_VERY_HIGH , .AltFunc = 0};
-	// MGPIO_vPinInit(&mco1);
 
-	// MRCC_vOutputClockOnHardwarePin( MCO1_PRESCALER_DIVIDE_1 , MCO1_SOURCE_HSE);
 
-	// MSYSTICK_vChooseClockSource(SYSTICK_CLK_SOURCE_AHB_DIV_8);
-	// MSYSTICK_vSetReloadValue(3125000);
-
-	MEXTI_vSetCallBackFunction(GPIO_PIN_0, vIncrementCounter);
-	MEXTI_vSetCallBackFunction(GPIO_PIN_1, vDecrementCounter);
-
-	// CONFIGURE NVIC
-	MNVIC_vEnableInterrupt(EXTI0_IRQn);
-	MNVIC_vEnableInterrupt(EXTI1_IRQn);
-	MNVIC_vConfigGroupPriority(NVIC_PriorityGroup16_SubGroup0);
-    MNVIC_vSetPriority(EXTI0_IRQn, 6, 0);
-	MNVIC_vSetPriority(EXTI1_IRQn, 6, 0);
-
-	// Configure the correct Line 
-	MSYSCFG_vSetExternalInterruptLine(GPIO_B , GPIO_PIN_0);
-	MSYSCFG_vSetExternalInterruptLine(GPIO_B , GPIO_PIN_1);
-
-	// Set the trigger condition
-	MEXTI_vSetTriggerCondition(GPIO_PIN_0 , FALLING_EDGE_INTERRUPT_TRIGGER);
-	MEXTI_vSetTriggerCondition(GPIO_PIN_1 , FALLING_EDGE_INTERRUPT_TRIGGER);
-
-	MEXTI_vEnableExternalInterruptLine(GPIO_PIN_0);
-	MEXTI_vEnableExternalInterruptLine(GPIO_PIN_1);
-
-	// MGPIO_vSetPinValue(GPIO_A, GPIO_PIN_0, GPIO_PIN_LOW);
-
-	// MSYSTICK_vSetCurrentValue(0);
-	// MSYSTICK_vEnableTimer();
-
-	// MSYSTICK_vSetIntervalMulti( 2000 , handler);
+	MSYSTICK_vChooseClockSource(SYSTICK_CLK_SOURCE_AHB_DIV_8);
+	
 
 	while(1){
 	
-		HSevenSeg_vDisplayNumber(&seven_seg_cfg , counter) ;
 		
+
+		// display the character I
+		for (int i = 0; i < 80; i++){
+		HLedMatrix_vDisplayFrame(&led_matrix_cfg , led_matrix_buffer[0]);
+		}
+		for (int i = 0; i < 80; i++){
+		HLedMatrix_vDisplayFrame(&led_matrix_cfg , led_matrix_buffer[1]);
+		}
+		for (int i = 0; i < 80; i++){
+		HLedMatrix_vDisplayFrame(&led_matrix_cfg , led_matrix_buffer[2]);
+		}
+		for (int i = 0; i < 80; i++){
+			HLedMatrix_vDisplayFrame(&led_matrix_cfg , led_matrix_buffer[3]);
+		}
+		for (int i = 0; i < 80; i++){
+			HLedMatrix_vDisplayFrame(&led_matrix_cfg , led_matrix_buffer[4]);
+		}
+		for (int i = 0; i < 80; i++){
+			HLedMatrix_vDisplayFrame(&led_matrix_cfg , led_matrix_buffer[5]);
+		}
 	}
 	return 0;
 }
 
-
-void vIncrementCounter(void){
-	if (counter < 9)
-		counter = (counter+1)%10;
-	DELAY_MS(100);
-}
-
-void vDecrementCounter(void){
-	if (counter > 0)
-		counter = (counter-1)%10;
-	DELAY_MS(100);
-}

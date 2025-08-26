@@ -31,7 +31,18 @@ src/APP/main.o: ../src/APP/main.c ../src/APP/../MCAL/RCC/RCC_int.h \
  ../src/APP/../MCAL/SYSTICK/SYSTICK_int.h \
  ../src/APP/../MCAL/SYSTICK/../../LIB/STD_TYPES.h \
  ../src/APP/../MCAL/SYSTICK/../../LIB/BIT_MATH.h \
- ../src/APP/../MCAL/SYSTICK/SYSTICK_prv.h
+ ../src/APP/../MCAL/SYSTICK/SYSTICK_prv.h \
+ ../src/APP/../HAL/LedMatrix/ledmatrix_int.h \
+ ../src/APP/../HAL/LedMatrix/../../LIB/STD_TYPES.h \
+ ../src/APP/../HAL/LedMatrix/../../LIB/BIT_MATH.h \
+ ../src/APP/../HAL/LedMatrix/../../MCAL/GPIO/gpio_int.h \
+ ../src/APP/../HAL/LedMatrix/../../MCAL/GPIO/gpio_prv.h \
+ ../src/APP/../HAL/LedMatrix/../../MCAL/RCC/rcc_int.h \
+ e:\iti\ arm\ course\workspace2\arm_stm\src\lib\std_types.h \
+ ../src/APP/../HAL/LedMatrix/../../MCAL/RCC/rcc_prv.h \
+ ../src/APP/../HAL/LedMatrix/../../MCAL/SYSTICK/systick_int.h \
+ ../src/APP/../HAL/LedMatrix/../../MCAL/SYSTICK/systick_prv.h \
+ ../src/APP/../HAL/LedMatrix/ledmatrix_prv.h
 
 ../src/APP/../MCAL/RCC/RCC_int.h:
 
@@ -106,3 +117,25 @@ e:\iti\ arm\ course\workspace2\arm_stm\src\lib\std_types.h:
 ../src/APP/../MCAL/SYSTICK/../../LIB/BIT_MATH.h:
 
 ../src/APP/../MCAL/SYSTICK/SYSTICK_prv.h:
+
+../src/APP/../HAL/LedMatrix/ledmatrix_int.h:
+
+../src/APP/../HAL/LedMatrix/../../LIB/STD_TYPES.h:
+
+../src/APP/../HAL/LedMatrix/../../LIB/BIT_MATH.h:
+
+../src/APP/../HAL/LedMatrix/../../MCAL/GPIO/gpio_int.h:
+
+../src/APP/../HAL/LedMatrix/../../MCAL/GPIO/gpio_prv.h:
+
+../src/APP/../HAL/LedMatrix/../../MCAL/RCC/rcc_int.h:
+
+e:\iti\ arm\ course\workspace2\arm_stm\src\lib\std_types.h:
+
+../src/APP/../HAL/LedMatrix/../../MCAL/RCC/rcc_prv.h:
+
+../src/APP/../HAL/LedMatrix/../../MCAL/SYSTICK/systick_int.h:
+
+../src/APP/../HAL/LedMatrix/../../MCAL/SYSTICK/systick_prv.h:
+
+../src/APP/../HAL/LedMatrix/ledmatrix_prv.h:

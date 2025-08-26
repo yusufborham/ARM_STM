@@ -81,7 +81,7 @@ MRCC_vOutputClockOnHardwarePin(u8 A_u8MCO1_PRESCALER , u8 A_u8MCO1_SOURCE);
 ### Initialzing a Pin 
 
 ``` c
-GPIOx_PinConfig_t pinFunction = { .Port = GPIOx, .Pin = GPIO_PIN_x, .Mode = GPIO_MODE_x, .OutputType = GPIO_OTYPE_X , .Pull = GPIO_PUPD_x, .Speed = GPIO_SPEED_x , .AltFunc = GPIO_AFx };
+GPIOx_PinConfig_t pinFunction = { .Port = GPIOx, .Pin = GPIO_PIN_x, .Mode = GPIO_MODE_x, .OutputType = GPIO_OTYPE_X , .PullType = GPIO_PUPD_x, .Speed = GPIO_SPEED_x , .AltFunc = GPIO_AFx };
 
 MGPIO_vPinInit(&pinFunction);
 ```
@@ -94,7 +94,7 @@ This structure can be used to configure any GPIO pin by changing the values of t
 
 - .OutputType options: GPIO_OTYPE_PP, GPIO_OTYPE_OD
 
-- .Pull options: GPIO_PUPD_NONE, GPIO_PUPD_PULL_UP, GPIO_PUPD_PULL_DOWN
+- .PullType options: GPIO_PUPD_NONE, GPIO_PUPD_PULL_UP, GPIO_PUPD_PULL_DOWN
 
 - .Speed options: GPIO_SPEED_LOW, GPIO_SPEED_MEDIUM, GPIO_SPEED_HIGH, GPIO_SPEED_VERY_HIGH
 

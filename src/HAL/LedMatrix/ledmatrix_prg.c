@@ -61,3 +61,4 @@ void HLedMatrix_vDisplayFrameFor(u32 A_u32DurationMs , LedMatrix_config_t* LedMa
         HLedMatrix_vDisplayFrame(LedMatrix_cfg , A_au8FrameData);
     }
 }
+

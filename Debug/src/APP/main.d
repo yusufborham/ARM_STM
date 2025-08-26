@@ -42,7 +42,9 @@ src/APP/main.o: ../src/APP/main.c ../src/APP/../MCAL/RCC/RCC_int.h \
  ../src/APP/../HAL/LedMatrix/../../MCAL/RCC/rcc_prv.h \
  ../src/APP/../HAL/LedMatrix/../../MCAL/SYSTICK/systick_int.h \
  ../src/APP/../HAL/LedMatrix/../../MCAL/SYSTICK/systick_prv.h \
- ../src/APP/../HAL/LedMatrix/ledmatrix_prv.h
+ ../src/APP/../HAL/LedMatrix/ledmatrix_prv.h ../src/APP/../OS/os_prv.h \
+ ../src/APP/../OS/os_int.h ../src/APP/../OS/os_prv.h \
+ ../src/APP/../OS/../lib/std_types.h ../src/APP/../OS/os_int.h
 
 ../src/APP/../MCAL/RCC/RCC_int.h:
 
@@ -139,3 +141,13 @@ e:\iti\ arm\ course\workspace2\arm_stm\src\lib\std_types.h:
 ../src/APP/../HAL/LedMatrix/../../MCAL/SYSTICK/systick_prv.h:
 
 ../src/APP/../HAL/LedMatrix/ledmatrix_prv.h:
+
+../src/APP/../OS/os_prv.h:
+
+../src/APP/../OS/os_int.h:
+
+../src/APP/../OS/os_prv.h:
+
+../src/APP/../OS/../lib/std_types.h:
+
+../src/APP/../OS/os_int.h:

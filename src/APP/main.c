@@ -18,11 +18,16 @@
 #include "../MCAL/SYSTICK/SYSTICK_prv.h"
 #include "../HAL/LedMatrix/ledmatrix_int.h"
 #include "../HAL/LedMatrix/ledmatrix_prv.h"
-
+#include "../OS/os_prv.h"
+#include "../OS/os_int.h"
 
 #define DELAY_MS(d) for(unsigned long i = 0 ; i < (d * 4000) ; i++ ){asm("NOP");}
 
-volatile u32 counter = 0;
+
+void O_vTak1 (void );
+
+void O_vTask2 (void );
+
 
 int main (void){
 	// enable clock for GPIOA, GPIOB and SYSCFG
@@ -33,68 +38,31 @@ int main (void){
 
 	MRCC_vSetAHBPrescaler(AHB_PRESCALER_DIVIDE_1);
 
-	LedMatrix_config_t led_matrix_cfg = {
-		.Port1 = GPIO_A,
-		.RowPins = {
-			{ .Pin = GPIO_PIN_0 },
-			{ .Pin = GPIO_PIN_1 },
-			{ .Pin = GPIO_PIN_2 },
-			{ .Pin = GPIO_PIN_3 },
-			{ .Pin = GPIO_PIN_4 },
-			{ .Pin = GPIO_PIN_5 },
-			{ .Pin = GPIO_PIN_6 },
-			{ .Pin = GPIO_PIN_7 }
-		},
-		.Port2 = GPIO_B,
-		.ColPins = {
-			{ .Pin = GPIO_PIN_0 },
-			{ .Pin = GPIO_PIN_1 },
-			{ .Pin = GPIO_PIN_2 },
-			{ .Pin = GPIO_PIN_5 },
-			{ .Pin = GPIO_PIN_6 },  
-			{ .Pin = GPIO_PIN_7 },
-			{ .Pin = GPIO_PIN_8 },
-			{ .Pin = GPIO_PIN_9 }
-		}
-	};
+    
+	GPIOx_PinConfig_t led1 = { .Port = GPIO_A, .Pin = GPIO_PIN_0, .Mode = GPIO_MODE_OUTPUT, .OutputType = GPIO_OTYPE_PP , .PullType = GPIO_PUPD_NONE, .Speed = GPIO_SPEED_MEDIUM , .AltFunc = GPIO_AF0 };
 
-	HLedMatrix_vInitPins(&led_matrix_cfg);
+	MGPIO_vPinInit(&led1);
 
-	// display character I  on 8*8 led matrix 
-	u8 led_matrix_buffer[6][8] = {
-		{0, 0, 231, 231, 231, 231, 0, 0},
-		{0, 0, 231, 231, 231, 231, 231, 231},
-		{0, 0, 231, 231, 231, 231, 0, 0},
-		{255, 195, 153, 153, 129, 153, 153, 255},
-		{126, 60, 24, 0, 36, 60, 60, 60},
-		{0, 0, 231, 231, 231, 231, 231, 231}
+	GPIOx_PinConfig_t led2 = { .Port = GPIO_A, .Pin = GPIO_PIN_1, .Mode = GPIO_MODE_OUTPUT, .OutputType = GPIO_OTYPE_PP , .PullType = GPIO_PUPD_NONE, .Speed = GPIO_SPEED_MEDIUM , .AltFunc = GPIO_AF0 };
 
-	};
+	MGPIO_vPinInit(&led2);
 
+	OS_u8CreateTask(0,O_vTak1 ,1000, 0);
 
+	OS_u8CreateTask(1,O_vTask2 ,500, 1);
 
-	MSYSTICK_vChooseClockSource(SYSTICK_CLK_SOURCE_AHB_DIV_8);
-	
-
+	OS_vinit();
+	OS_vStart();
 	while(1){
-	
-		
-
-		// display the character I
-		 
-		HLedMatrix_vDisplayFrameFor(1000 , &led_matrix_cfg , led_matrix_buffer[0]);
-		 
-		HLedMatrix_vDisplayFrameFor(1000 , &led_matrix_cfg , led_matrix_buffer[1]);
-		 
-		HLedMatrix_vDisplayFrameFor(1000 , &led_matrix_cfg , led_matrix_buffer[2]);
-		 
-		HLedMatrix_vDisplayFrameFor(1000 , &led_matrix_cfg , led_matrix_buffer[3]);
-		 
-		HLedMatrix_vDisplayFrameFor(1000 , &led_matrix_cfg , led_matrix_buffer[4]);
-		 
-		HLedMatrix_vDisplayFrameFor(1000 , &led_matrix_cfg , led_matrix_buffer[5]);
 		 
 	}
 	return 0;
 }
 
+void O_vTak1 (void ){
+	MGPIO_vTogglePinValue(GPIO_A ,GPIO_PIN_0) ;
+}
+
+void O_vTask2 (void ){
+	MGPIO_vTogglePinValue(GPIO_A ,GPIO_PIN_1) ;
+}

@@ -61,15 +61,15 @@ u32 MSYSTICK_u32GetRemainingTime(){
     return (SYSTICK->VAL) & SYSTICK_MAX_VALUE;
 }
 
-void MSYSTICK_vSetDelayMS(u32 A_u32Delay){
+void MSYSTICK_vSetDelayMS(f32 A_f32Delay){
      u32 L_u32NumberTicks = 0 ;
     // IF using AHB/8
     // and an external clock of 25MHz then 3125 tick means 1 ms has passed thus
     switch (G_u32ClockSource) {
         case SYSTICK_CLK_SOURCE_AHB_DIV_8:
-            L_u32NumberTicks = (A_u32Delay * SYSTICK_TICKS_1MS_DIV_8);
+            L_u32NumberTicks = (A_f32Delay * SYSTICK_TICKS_1MS_DIV_8);
             if ((L_u32NumberTicks < SYSTICK_MAX_VALUE) && (L_u32NumberTicks > 0)) {
-                MSYSTICK_vSetReloadValue(L_u32NumberTicks);
+                MSYSTICK_vSetReloadValue((u32)L_u32NumberTicks);
             }
             else {
                 MSYSTICK_vSetReloadValue(SYSTICK_MAX_VALUE);
@@ -77,9 +77,9 @@ void MSYSTICK_vSetDelayMS(u32 A_u32Delay){
             break;
 
         case SYSTICK_CLK_SOURCE_AHB_DIV_1:
-            L_u32NumberTicks = (A_u32Delay * SYSTICK_TICKS_1MS_DIV_1);
+            L_u32NumberTicks = (A_f32Delay * SYSTICK_TICKS_1MS_DIV_1);
             if ((L_u32NumberTicks < SYSTICK_MAX_VALUE) && (L_u32NumberTicks > 0)) {
-                MSYSTICK_vSetReloadValue(L_u32NumberTicks);
+                MSYSTICK_vSetReloadValue((u32)L_u32NumberTicks);
             }
 
             else {

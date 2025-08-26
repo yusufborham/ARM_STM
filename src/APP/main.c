@@ -81,24 +81,19 @@ int main (void){
 		
 
 		// display the character I
-		for (int i = 0; i < 80; i++){
-		HLedMatrix_vDisplayFrame(&led_matrix_cfg , led_matrix_buffer[0]);
-		}
-		for (int i = 0; i < 80; i++){
-		HLedMatrix_vDisplayFrame(&led_matrix_cfg , led_matrix_buffer[1]);
-		}
-		for (int i = 0; i < 80; i++){
-		HLedMatrix_vDisplayFrame(&led_matrix_cfg , led_matrix_buffer[2]);
-		}
-		for (int i = 0; i < 80; i++){
-			HLedMatrix_vDisplayFrame(&led_matrix_cfg , led_matrix_buffer[3]);
-		}
-		for (int i = 0; i < 80; i++){
-			HLedMatrix_vDisplayFrame(&led_matrix_cfg , led_matrix_buffer[4]);
-		}
-		for (int i = 0; i < 80; i++){
-			HLedMatrix_vDisplayFrame(&led_matrix_cfg , led_matrix_buffer[5]);
-		}
+		 
+		HLedMatrix_vDisplayFrameFor(1000 , &led_matrix_cfg , led_matrix_buffer[0]);
+		 
+		HLedMatrix_vDisplayFrameFor(1000 , &led_matrix_cfg , led_matrix_buffer[1]);
+		 
+		HLedMatrix_vDisplayFrameFor(1000 , &led_matrix_cfg , led_matrix_buffer[2]);
+		 
+		HLedMatrix_vDisplayFrameFor(1000 , &led_matrix_cfg , led_matrix_buffer[3]);
+		 
+		HLedMatrix_vDisplayFrameFor(1000 , &led_matrix_cfg , led_matrix_buffer[4]);
+		 
+		HLedMatrix_vDisplayFrameFor(1000 , &led_matrix_cfg , led_matrix_buffer[5]);
+		 
 	}
 	return 0;
 }

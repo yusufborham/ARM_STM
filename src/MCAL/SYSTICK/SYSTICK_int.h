@@ -100,9 +100,9 @@ u32 MSYSTICK_u32GetRemainingTime();
 
 /*
  * @brief Set a delay in milliseconds using SysTick.
- * @param A_u32Delay Delay duration in milliseconds.
+ * @param A_f32Delay Delay duration in milliseconds.
  */
-void MSYSTICK_vSetDelayMS(u32 A_u32Delay);
+void MSYSTICK_vSetDelayMS(f32 A_f32Delay);
 
 /*
  * @brief Set a periodic interval using SysTick.

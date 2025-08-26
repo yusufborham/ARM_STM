@@ -51,6 +51,13 @@ void HLedMatrix_vDisplayFrame(LedMatrix_config_t* LedMatrix_cfg , u8 A_au8FrameD
         HLedMatrix_vDisplayColumn(LedMatrix_cfg, (1 << col));
         
         // 4. Delay for a short period for persistence of vision
-        MSYSTICK_vSetDelayMS(2); // e.g., 2ms delay. Total refresh time = 8*2 = 16ms (~62.5 Hz)
+        MSYSTICK_vSetDelayMS(2.5); // e.g., 2.5ms delay. Total refresh time = 8*2.5 = 20ms (~50 Hz)
+    }
+}
+
+void HLedMatrix_vDisplayFrameFor(u32 A_u32DurationMs , LedMatrix_config_t* LedMatrix_cfg , u8 A_au8FrameData[8]){
+    u32 L_u32CountTimes = A_u32DurationMs / 20 ; // each frame takes 20 ms to display
+    for (int i = 0; i < L_u32CountTimes; i++) {
+        HLedMatrix_vDisplayFrame(LedMatrix_cfg , A_au8FrameData);
     }
 }

@@ -54,7 +54,15 @@ void MSYSTICK_vSetCurrentValue(u32 A_u32CurrentValue){
 }
 
 u32 MSYSTICK_u32GetElapsedTime(){
-    return (SYSTICK->LOAD - SYSTICK->VAL) & SYSTICK_MAX_VALUE;
+    switch (G_u32ClockSource)
+    {
+    case SYSTICK_CLK_SOURCE_AHB_DIV_8:
+        return ((SYSTICK->LOAD - SYSTICK->VAL) & SYSTICK_MAX_VALUE)/SYSTICK_TICKS_1MS_DIV_8;
+    case SYSTICK_CLK_SOURCE_AHB_DIV_1:
+        return ((SYSTICK->LOAD - SYSTICK->VAL) & SYSTICK_MAX_VALUE)/SYSTICK_TICKS_1MS_DIV_1;
+    default:
+        return 0;
+    }
 }
 
 u32 MSYSTICK_u32GetRemainingTime(){
@@ -121,6 +129,33 @@ void MSYSTICK_vSetIntervalMulti( u32 A_u32Interval , void (*A_pvCallBack)(void))
 
 }
 
+void MSYSTICK_vSetIntervalMultiMicroseconds( u32 A_u32Interval , void (*A_pvCallBack)(void)){
+    MSYSTICK_vEnableOvfInterrupt();
+    // SET THE FLAG TO SYSTICK_RUNNING_MULTI
+    G_u8Flag = SYSTICK_RUNNING_MULTI_MICRO;
+    // asign the call back function 
+    G_pvCallBack = A_pvCallBack;
+    u32 L_u32TicksNumber = 0 ;
+    
+    switch (G_u32ClockSource){
+        case SYSTICK_CLK_SOURCE_AHB_DIV_8:
+            L_u32TicksNumber = SYSTICK_TICKS_1US_DIV_8 * A_u32Interval;
+            break;
+        case SYSTICK_CLK_SOURCE_AHB_DIV_1:
+            L_u32TicksNumber = SYSTICK_TICKS_1US_DIV_1 * A_u32Interval;
+            break;
+    }
+    
+    if (L_u32TicksNumber < SYSTICK_MAX_VALUE){
+        MSYSTICK_vStartTimer(L_u32TicksNumber);
+    }
+
+    else {
+        L_u32TicksNumber = SYSTICK_MAX_VALUE;
+    }
+
+}
+
 void MSYSTICK_vSetIntervalSingle(u32 A_u32Interval, void (*A_pvCallBack)(void)){
     MSYSTICK_vEnableOvfInterrupt();
     // SET THE FLAG TO SYSTICK_RUNNING_SINGLE
@@ -160,6 +195,10 @@ void SysTick_Handler(void){
             case SYSTICK_RUNNING_SINGLE:
                 G_pvCallBack();
                 MSYSTICK_vDisableTimer();
+                break;
+            case SYSTICK_RUNNING_MULTI_MICRO:
+                G_pvCallBack();
+                MSYSTICK_vSetCurrentValue(0); // Reset the counter
                 break;
         }
     }

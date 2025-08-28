@@ -62,6 +62,7 @@
     "exti_prv.h": "c",
     "exti_cfg.h": "c",
     "bit_math.h": "c",
-    "std_types.h": "c"
+    "std_types.h": "c",
+    "dac_int.h": "c"
   }
 }

@@ -21,19 +21,15 @@ typedef enum {
 typedef enum {
     TASK_SUCCESSFULLY_SUSPENDED = 0 ,
     TASK_NOT_RUNNING            = 1 ,
-    TASK_EXCEEDED_MAX_NUMBER    = 2 ,
 }SuspendTask_error_t;
 
 typedef enum {
     TASK_SUCCESSFULLY_RESUMED = 0 ,
     TASK_NOT_SUSPENDED        = 1 ,
-    TASK_EXCEEDED_MAX_NUMBER  = 2 ,
 }ResumeTask_error_t;
 
 typedef enum {
     TASK_SUCCESSFULLY_DELETED = 0 ,
-    TASK_NOT_RUNNING          = 1 ,
-    TASK_EXCEEDED_MAX_NUMBER  = 2 ,
 }DeleteTask_error_t;
 
 typedef struct {

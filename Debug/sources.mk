@@ -28,6 +28,7 @@ CPP_DEPS :=
 # Every subdirectory with source files must be described here
 SUBDIRS := \
 src/APP \
+src/HAL/DAC \
 src/HAL/LedMatrix \
 src/HAL/SevenSegment \
 src/MCAL/EXTI \

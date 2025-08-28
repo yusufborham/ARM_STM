@@ -118,6 +118,13 @@ void MSYSTICK_vSetIntervalMulti( u32 A_u32Interval , void (*A_pvCallBack)(void))
  */
 void MSYSTICK_vSetIntervalSingle(u32 A_u32Interval, void (*A_pvCallBack)(void));
 
+/*
+ * @brief Set a periodic interval using SysTick.
+ * @param A_u32Interval Interval duration in microseconds.
+ * @param A_pvCallBack Pointer to the callback function to be called on interval.
+ */
+void MSYSTICK_vSetIntervalMultiMicroseconds( u32 A_u32Interval , void (*A_pvCallBack)(void));
+
 
 
 #endif /* SYSTICK_INT_H */

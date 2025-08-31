@@ -63,6 +63,13 @@
     "exti_cfg.h": "c",
     "bit_math.h": "c",
     "std_types.h": "c",
-    "dac_int.h": "c"
+    "dac_int.h": "c",
+    "song.h": "c",
+    "rcc_int.h": "c",
+    "rcc_prv.h": "c",
+    "systick_prv.h": "c",
+    "delay.h": "c",
+    "ledmatrix_prv.h": "c",
+    "stp_int.h": "c"
   }
 }

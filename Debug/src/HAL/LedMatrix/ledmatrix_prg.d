@@ -13,6 +13,11 @@ src/HAL/LedMatrix/ledmatrix_prg.o: ../src/HAL/LedMatrix/ledmatrix_prg.c \
  e:\iti\ arm\ course\workspace2\arm_stm\src\lib\std_types.h \
  e:\iti\ arm\ course\workspace2\arm_stm\src\lib\bit_math.h \
  ../src/HAL/LedMatrix/../../MCAL/SYSTICK/systick_prv.h \
+ ../src/HAL/LedMatrix/../../HAL/STP/STP_int.h \
+ ../src/HAL/LedMatrix/../../HAL/STP/../../LIB/STD_TYPES.h \
+ ../src/HAL/LedMatrix/../../HAL/STP/../../MCAL/GPIO/GPIO_int.h \
+ ../src/HAL/LedMatrix/../../HAL/STP/../../LIB/Delay.h \
+ ../src/HAL/LedMatrix/../../LIB/Delay.h \
  ../src/HAL/LedMatrix/ledmatrix_prv.h
 
 ../src/HAL/LedMatrix/ledmatrix_int.h:
@@ -42,5 +47,15 @@ e:\iti\ arm\ course\workspace2\arm_stm\src\lib\std_types.h:
 e:\iti\ arm\ course\workspace2\arm_stm\src\lib\bit_math.h:
 
 ../src/HAL/LedMatrix/../../MCAL/SYSTICK/systick_prv.h:
+
+../src/HAL/LedMatrix/../../HAL/STP/STP_int.h:
+
+../src/HAL/LedMatrix/../../HAL/STP/../../LIB/STD_TYPES.h:
+
+../src/HAL/LedMatrix/../../HAL/STP/../../MCAL/GPIO/GPIO_int.h:
+
+../src/HAL/LedMatrix/../../HAL/STP/../../LIB/Delay.h:
+
+../src/HAL/LedMatrix/../../LIB/Delay.h:
 
 ../src/HAL/LedMatrix/ledmatrix_prv.h:

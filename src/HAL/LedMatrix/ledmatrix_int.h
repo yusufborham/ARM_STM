@@ -12,17 +12,32 @@
 
 #include "../../MCAL/SYSTICK/systick_int.h"
 #include "../../MCAL/SYSTICK/systick_prv.h"
+
+#include "../../HAL/STP/STP_int.h"
+#include "../../LIB/Delay.h"
 // Your code here
 
 typedef struct {
     u8 Pin ;
 }Pin_cfg_t;
 
+typedef enum{
+    LED_MATRIX_NORMAL_MODE , 
+    LED_MATRIX_STP_MODE 
+}LedMatrix_Mode_t ;
 typedef struct {
-    u8 Port1;
-    Pin_cfg_t RowPins[8];
-    u8 Port2;
-    Pin_cfg_t ColPins[8];
+    LedMatrix_Mode_t Mode ;
+    union {
+        struct {
+                u8 Port1;
+                Pin_cfg_t RowPins[8];
+                u8 Port2;
+                Pin_cfg_t ColPins[8];
+        }normalConfig; 
+
+        STP_Config_t stpConfig;
+    } Config;
+
 } LedMatrix_config_t;
 
 /*

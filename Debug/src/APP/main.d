@@ -42,6 +42,11 @@ src/APP/main.o: ../src/APP/main.c ../src/APP/../MCAL/RCC/RCC_int.h \
  ../src/APP/../HAL/LedMatrix/../../MCAL/RCC/rcc_prv.h \
  ../src/APP/../HAL/LedMatrix/../../MCAL/SYSTICK/systick_int.h \
  ../src/APP/../HAL/LedMatrix/../../MCAL/SYSTICK/systick_prv.h \
+ ../src/APP/../HAL/LedMatrix/../../HAL/STP/STP_int.h \
+ e:\iti\ arm\ course\workspace2\arm_stm\src\lib\std_types.h \
+ e:\iti\ arm\ course\workspace2\arm_stm\src\mcal\gpio\gpio_int.h \
+ e:\iti\ arm\ course\workspace2\arm_stm\src\lib\delay.h \
+ ../src/APP/../HAL/LedMatrix/../../LIB/Delay.h \
  ../src/APP/../HAL/LedMatrix/ledmatrix_prv.h ../src/APP/../OS/os_prv.h \
  ../src/APP/../OS/os_int.h ../src/APP/../OS/os_prv.h \
  ../src/APP/../OS/../lib/std_types.h ../src/APP/../OS/os_int.h \
@@ -50,7 +55,8 @@ src/APP/main.o: ../src/APP/main.c ../src/APP/../MCAL/RCC/RCC_int.h \
  ../src/APP/../HAL/DAC/../../MCAL/GPIO/GPIO_int.h \
  ../src/APP/../HAL/DAC/../../MCAL/RCC/RCC_int.h \
  e:\iti\ arm\ course\workspace2\arm_stm\src\lib\std_types.h \
- ../src/APP/../HAL/DAC/../../MCAL/RCC/RCC_prv.h
+ ../src/APP/../HAL/DAC/../../MCAL/RCC/RCC_prv.h ../src/APP/../LIB/Delay.h \
+ ../src/APP/../HAL/STP/STP_int.h
 
 ../src/APP/../MCAL/RCC/RCC_int.h:
 
@@ -146,6 +152,16 @@ e:\iti\ arm\ course\workspace2\arm_stm\src\lib\std_types.h:
 
 ../src/APP/../HAL/LedMatrix/../../MCAL/SYSTICK/systick_prv.h:
 
+../src/APP/../HAL/LedMatrix/../../HAL/STP/STP_int.h:
+
+e:\iti\ arm\ course\workspace2\arm_stm\src\lib\std_types.h:
+
+e:\iti\ arm\ course\workspace2\arm_stm\src\mcal\gpio\gpio_int.h:
+
+e:\iti\ arm\ course\workspace2\arm_stm\src\lib\delay.h:
+
+../src/APP/../HAL/LedMatrix/../../LIB/Delay.h:
+
 ../src/APP/../HAL/LedMatrix/ledmatrix_prv.h:
 
 ../src/APP/../OS/os_prv.h:
@@ -171,3 +187,7 @@ e:\iti\ arm\ course\workspace2\arm_stm\src\lib\std_types.h:
 e:\iti\ arm\ course\workspace2\arm_stm\src\lib\std_types.h:
 
 ../src/APP/../HAL/DAC/../../MCAL/RCC/RCC_prv.h:
+
+../src/APP/../LIB/Delay.h:
+
+../src/APP/../HAL/STP/STP_int.h:

@@ -1,4 +1,3 @@
-
 #include "../MCAL/RCC/RCC_int.h"
 #include "../LIB/STD_TYPES.h"
 #include "../LIB/BIT_MATH.h"
@@ -24,50 +23,20 @@
 #include "../HAL/DAC/DAC_int.h"
 #include "../LIB/Delay.h"
 #include "../HAL/STP/STP_int.h"
-
-
-static LedMatrix_config_t LedMatrix_cfg = {
-	.Mode = LED_MATRIX_STP_MODE,
-	.Config = {
-		.stpConfig = {
-			.Port = GPIO_A,
-			.ShiftClkPin = GPIO_PIN_0,
-			.SerialDataPin = GPIO_PIN_1,
-			.LatchPin = GPIO_PIN_2,
-			.Mode = STP_16BIT_MODE
-		}
-	}
-};
-
-int main (void){
+#in
+int main(void) {
 	// enable clock for GPIOA, GPIOB and SYSCFG
 	MRCC_vInit();
-
 	MRCC_vSetAHBPrescaler(AHB_PRESCALER_DIVIDE_1);
 
 	MRCC_vEnableClk(RCC_AHB1, GPIOAEN);
 	MRCC_vEnableClk(RCC_AHB1, GPIOBEN);
 	MRCC_vEnableClk(RCC_APB2, SYSCFGEN);
 
-	HLedMatrix_vInitPins(&LedMatrix_cfg);
-
-	// display character I  on 8*8 led matrix 
-	u8 led_matrix_buffer[6][8] = {
-		{0, 0, 231, 231, 231, 231, 0, 0},
-		{0, 0, 231, 231, 231, 231, 231, 231},
-		{0, 0, 231, 231, 231, 231, 0, 0},
-		{255, 195, 153, 153, 129, 153, 153, 255},
-		{126, 60, 24, 0, 36, 60, 60, 60},
-		{0, 0, 231, 231, 231, 231, 231, 231}
-
-	};
-
-	while(1){
-
-			HLedMatrix_vDisplayFrame(&LedMatrix_cfg , led_matrix_buffer[0]);
-
-		}
+	while (1) {
+	}
 
 	return 0;
 }
+
 

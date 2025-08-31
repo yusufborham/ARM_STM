@@ -55,8 +55,13 @@ void MSYSTICK_vEnableTimer();
  * @param A_u32ReloadValue Reload value (max 0xFFFFFF)
  * @note This automatically enables the timer.
  */
-void MSYSTICK_vStartTimer(u32 A_u32ReloadValue);
+void MSYSTICK_vStartTimerTicks(u32 A_u32ReloadValue);
 
+/*
+ * @brief Start SysTick with a given reload value in milliseconds.
+ * @param A_u32ReloadValue Reload value in milliseconds.
+ */
+void MSYSTICK_vStartTimerMs(u32 A_u32ReloadValue );
 /**
  * @brief Stop/disable the SysTick timer.
  */
@@ -128,6 +133,12 @@ u32 MSYSTICK_u32GetRemainingTimeTicks();
  */
 void MSYSTICK_vSetDelayMS(f32 A_f32Delay);
 
+
+/**
+ * @brief Set the callback function for SysTick overflow.
+ * @param A_pvCallBack Pointer to the callback function.
+*/
+void MSYSTICK_vSetOVFCallback(void (*A_pvCallBack)(void));
 /*
  * @brief Set a periodic interval using SysTick.
  * @param A_u32Interval Interval duration in milliseconds.

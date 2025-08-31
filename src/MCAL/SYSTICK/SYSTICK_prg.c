@@ -32,9 +32,20 @@ void MSYSTICK_vDisableTimer(){
     CLR_BIT(SYSTICK->CTRL , ENABLE) ;
 }
 
-void MSYSTICK_vStartTimer( u32 A_u32ReloadValue){
+void MSYSTICK_vStartTimerTicks( u32 A_u32ReloadValue){
     MSYSTICK_vSetReloadValue(A_u32ReloadValue);
     MSYSTICK_vEnableTimer();
+}
+
+void MSYSTICK_vStartTimerMs(u32 A_u32ReloadValue ){
+    switch (G_u32ClockSource) {
+        case SYSTICK_CLK_SOURCE_AHB_DIV_8:
+            MSYSTICK_vStartTimerTicks(A_u32ReloadValue * SYSTICK_TICKS_1MS_DIV_8);
+            break;
+        case SYSTICK_CLK_SOURCE_AHB_DIV_1:
+            MSYSTICK_vStartTimerTicks(A_u32ReloadValue * SYSTICK_TICKS_1MS_DIV_1);
+            break;
+    }
 }
 
 void MSYSTICK_vSetReloadValue(u32 A_u32ReloadValue){
@@ -160,13 +171,19 @@ void MSYSTICK_vSetIntervalMulti( u32 A_u32Interval , void (*A_pvCallBack)(void))
     }
     
     if (L_u32TicksNumber < SYSTICK_MAX_VALUE){
-        MSYSTICK_vStartTimer(L_u32TicksNumber);
+        MSYSTICK_vStartTimerTicks(L_u32TicksNumber);
     }
 
     else {
         L_u32TicksNumber = SYSTICK_MAX_VALUE;
     }
 
+}
+
+void MSYSTICK_vSetOVFCallback(void (*A_pvCallBack)(void)){
+    G_u8Flag = SYSTICK_NORMAL_MODE;
+    MSYSTICK_vEnableOvfInterrupt();
+    G_pvCallBack = A_pvCallBack;
 }
 
 void MSYSTICK_vSetIntervalMultiMicroseconds( u32 A_u32Interval , void (*A_pvCallBack)(void)){
@@ -187,7 +204,7 @@ void MSYSTICK_vSetIntervalMultiMicroseconds( u32 A_u32Interval , void (*A_pvCall
     }
     
     if (L_u32TicksNumber < SYSTICK_MAX_VALUE){
-        MSYSTICK_vStartTimer(L_u32TicksNumber);
+        MSYSTICK_vStartTimerTicks(L_u32TicksNumber);
     }
 
     else {
@@ -214,11 +231,13 @@ void MSYSTICK_vSetIntervalSingle(u32 A_u32Interval, void (*A_pvCallBack)(void)){
     }
 
     if (L_u32TicksNumber < SYSTICK_MAX_VALUE){
-        MSYSTICK_vStartTimer(L_u32TicksNumber);
+        MSYSTICK_vStartTimerTicks(L_u32TicksNumber);
     }
 
     else {
         L_u32TicksNumber = SYSTICK_MAX_VALUE;
+        MSYSTICK_vStartTimerTicks(L_u32TicksNumber);
+
     }
 
 }
@@ -229,16 +248,16 @@ void SysTick_Handler(void){
         switch (G_u8Flag) {
             case SYSTICK_RUNNING_MULTI:
                 G_pvCallBack();
-                MSYSTICK_vSetCurrentValue(0); // Reset the counter
                 break;
-
             case SYSTICK_RUNNING_SINGLE:
                 G_pvCallBack();
                 MSYSTICK_vDisableTimer();
                 break;
             case SYSTICK_RUNNING_MULTI_MICRO:
                 G_pvCallBack();
-                MSYSTICK_vSetCurrentValue(0); // Reset the counter
+                break;
+            case SYSTICK_NORMAL_MODE:
+                G_pvCallBack();
                 break;
         }
     }

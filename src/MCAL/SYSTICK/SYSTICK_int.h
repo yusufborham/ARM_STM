@@ -88,16 +88,40 @@ u32 MSYSTICK_u32GetCurrentValue();
 
 /**
  * @brief Calculate elapsed time since the last reload.
- * @return u32 - Elapsed ticks.
+ * @return u32 - Elapsed time in milliseconds.
  */
-u32 MSYSTICK_u32GetElapsedTime();
+u32 MSYSTICK_u32GetElapsedTimeMs();
+
+/*
+ * @brief Calculate elapsed time in microseconds since the last reload.
+ * @return u32 - Elapsed time in microseconds.
+ */
+u32 MSYSTICK_u32GetElapsedTimeUs();
+
+/*
+ * @brief Calculate elapsed time in ticks since the last reload.
+ * @return u32 - Elapsed time in ticks.
+ */
+u32 MSYSTICK_u32GetElapsedTimeTicks();
 
 /**
  * @brief Calculate remaining time before the timer expires.
- * @return u32 - Remaining ticks.
+ * @return u32 - Remaining time in milliseconds.
  */
-u32 MSYSTICK_u32GetRemainingTime();
+u32 MSYSTICK_u32GetRemainingTimeMs();
 
+/*
+ * @brief Calculate remaining time before the timer expires.
+ * @return u32 - Remaining time in microseconds.
+ */
+u32 MSYSTICK_u32GetRemainingTimeUs();
+
+/**
+ * @brief Calculate remaining time before the timer expires.
+ * @return u32 - Remaining time in ticks.
+ */
+
+u32 MSYSTICK_u32GetRemainingTimeTicks();
 /*
  * @brief Set a delay in milliseconds using SysTick.
  * @param A_f32Delay Delay duration in milliseconds.

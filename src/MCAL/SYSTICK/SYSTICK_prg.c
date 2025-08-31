@@ -53,7 +53,7 @@ void MSYSTICK_vSetCurrentValue(u32 A_u32CurrentValue){
     SYSTICK->VAL = A_u32CurrentValue & SYSTICK_MAX_VALUE;
 }
 
-u32 MSYSTICK_u32GetElapsedTime(){
+u32 MSYSTICK_u32GetElapsedTimeMs(){
     switch (G_u32ClockSource)
     {
     case SYSTICK_CLK_SOURCE_AHB_DIV_8:
@@ -65,8 +65,48 @@ u32 MSYSTICK_u32GetElapsedTime(){
     }
 }
 
-u32 MSYSTICK_u32GetRemainingTime(){
-    return (SYSTICK->VAL) & SYSTICK_MAX_VALUE;
+u32 MSYSTICK_u32GetElapsedTimeUs(){
+    switch (G_u32ClockSource)
+    {
+    case SYSTICK_CLK_SOURCE_AHB_DIV_8:
+        return ((SYSTICK->LOAD - SYSTICK->VAL) & SYSTICK_MAX_VALUE)/SYSTICK_TICKS_1US_DIV_8;
+    case SYSTICK_CLK_SOURCE_AHB_DIV_1:
+        return ((SYSTICK->LOAD - SYSTICK->VAL) & SYSTICK_MAX_VALUE)/SYSTICK_TICKS_1US_DIV_1;
+    default:
+        return 0;
+    }
+}
+
+u32 MSYSTICK_u32GetElapsedTimeTicks(){
+    return (SYSTICK->LOAD - SYSTICK->VAL) & SYSTICK_MAX_VALUE;
+}
+
+u32 MSYSTICK_u32GetRemainingTimeMs(){
+    switch (G_u32ClockSource)
+    {
+    case SYSTICK_CLK_SOURCE_AHB_DIV_8:
+        return (SYSTICK->VAL & SYSTICK_MAX_VALUE)/SYSTICK_TICKS_1MS_DIV_8;
+    case SYSTICK_CLK_SOURCE_AHB_DIV_1:
+        return (SYSTICK->VAL & SYSTICK_MAX_VALUE)/SYSTICK_TICKS_1MS_DIV_1;
+    default:
+        return 0;
+    }
+}
+
+u32 MSYSTICK_u32GetRemainingTimeUs(){
+    switch (G_u32ClockSource)
+    {
+    case SYSTICK_CLK_SOURCE_AHB_DIV_8:
+        return (SYSTICK->VAL & SYSTICK_MAX_VALUE)/SYSTICK_TICKS_1US_DIV_8;
+    case SYSTICK_CLK_SOURCE_AHB_DIV_1:
+        return (SYSTICK->VAL & SYSTICK_MAX_VALUE)/SYSTICK_TICKS_1US_DIV_1;
+    default:
+        return 0;
+    }
+}
+
+u32 MSYSTICK_u32GetRemainingTimeTicks(){
+    return (SYSTICK->VAL & SYSTICK_MAX_VALUE);
 }
 
 void MSYSTICK_vSetDelayMS(f32 A_f32Delay){

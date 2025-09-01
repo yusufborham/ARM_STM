@@ -39,6 +39,7 @@ src/MCAL/NVIC \
 src/MCAL/RCC \
 src/MCAL/SYSCFG \
 src/MCAL/SYSTICK \
+src/MCAL/USART \
 src/OS \
 system/src/cmsis \
 system/src/cortexm \

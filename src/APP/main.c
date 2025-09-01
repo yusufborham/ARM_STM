@@ -19,11 +19,13 @@
 #include "../HAL/LedMatrix/ledmatrix_prv.h"
 #include "../OS/os_prv.h"
 #include "../OS/os_int.h"
-#include "song.h"
+//#include "song.h"
 #include "../HAL/DAC/DAC_int.h"
 #include "../LIB/Delay.h"
 #include "../HAL/STP/STP_int.h"
-#in
+#include "../MCAL/USART/USART_int.h"
+
+
 int main(void) {
 	// enable clock for GPIOA, GPIOB and SYSCFG
 	MRCC_vInit();
@@ -32,11 +34,28 @@ int main(void) {
 	MRCC_vEnableClk(RCC_AHB1, GPIOAEN);
 	MRCC_vEnableClk(RCC_AHB1, GPIOBEN);
 	MRCC_vEnableClk(RCC_APB2, SYSCFGEN);
+	MRCC_vEnableClk(RCC_APB2, USART1EN);
 
+	MSYSTICK_vChooseClockSource(SYSTICK_CLK_SOURCE_AHB_DIV_1);
+
+	// set GPIO A9 to be used as a TX for the USART1 
+
+	GPIOx_PinConfig_t txPin = {
+		.Port = GPIO_A,
+		.Pin = GPIO_PIN_9,
+		.Mode = GPIO_MODE_ALTERNATE,	
+		.AltFunc = GPIO_AF7
+	};
+
+	MGPIO_vPinInit(&txPin);
+
+	MUSART_Init();
+
+	char string[] = "Hello" ; 
 	while (1) {
+		MUSART_SendString(string);
 	}
 
 	return 0;
 }
-
 

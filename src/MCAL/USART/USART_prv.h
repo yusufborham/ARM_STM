@@ -3,17 +3,43 @@
 
 #include "../../LIB/STD_TYPES.h"
 
+#define MEGA(x)   ((x) * 1000000UL)
+
 #define USART1_BASE_ADDRESS 0x40011000
 #define USART2_BASE_ADDRESS 0x40004400
 #define USART6_BASE_ADDRESS 0x40011400
 
+typedef enum {
+    USART_FLAG_PARITY_ERROR                 = 0,
+    USART_FLAG_FRAME_ERROR                  = 1,
+    USART_FLAG_NOISE_DETECTED               = 2,
+    USART_FLAG_OVER_RUN                     = 3,
+    USART_FLAG_IDLE_DETECTED                = 4,
+    USART_FLAG_READ_DATA_READY              = 5,
+    USART_FLAG_TRANSMISSION_COMPLETE        = 6,
+    USART_FLAG_TRANSMIT_DATA_REG_EMPTY = 7
+}USART_Flags_t;
+
+typedef enum {
+    USART_IDLE_DETECTED_INT             = 4,
+    USART_READ_DATA_READY_INT           = 5,
+    USART_TRANSMISION_COMPLETE_INT      = 6,
+    USART_TRANSMIT_DATA_REG_EMPTY_INT   = 7,
+    USART_PARITY_ERROR_INT              = 8
+}USART_Interrupts_t;
+
 typedef struct {
-    u32 SR ;
-    u32 DR ;
-    u32 BRR ;
-    u32 CR1 ;
-    u32 CR2 ;
-    u32 CR3 ;
+    u32 DIV_Mantissa ;
+    u8 DIV_Fraction ;
+} USART_BaudRate_cfg_t;
+
+typedef struct {
+    volatile u32 SR ;
+    volatile u32 DR ;
+    volatile u32 BRR ;
+    volatile u32 CR1 ;
+    volatile u32 CR2 ;
+    volatile u32 CR3 ;
     u32 GTPR ;
 } USART_RegDef_t;
 
@@ -78,6 +104,14 @@ typedef struct {
 #define CTSIE   10
 #define ONEBIT  11
 
+
+// stop bits macros 
+
+#define USART_CR2_STOP_Msk  0b11
+#define USART_0_5_STOP_BIT   0b01
+#define USART_1_STOP_BIT     0b00
+#define USART_1_5_STOP_BIT   0b11
+#define USART_2_STOP_BIT     0b10
 
 
 #endif /* USART_PRV_H */

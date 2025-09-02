@@ -49,11 +49,23 @@ int main(void) {
 
 	MGPIO_vPinInit(&txPin);
 
-	MUSART_Init();
+	USART_Config_t usart1_cfg = {
+		.peripheral = USART_PERIPH_1,
+		.baudRate = USART_BAUDRATE_9600,
+		.wordLength = USART_WORD_LENGTH_8BITS,
+		.stopBits = USART_STOP_BITS_1,
+		.parity = USART_PARITY_NONE,
+		.sampleRate = USART_SAMPLE_16_TIMES,
+		.sampleMethod = USART_SAMPLE_METHOD_THREE_BITS,
+		.mode = USART_MODE_TX_ONLY,
+		.fclk = USART_CLK_25MHZ
+	};
+
+	MUSART_Init(&usart1_cfg);
 
 	char string[] = "Hello" ; 
 	while (1) {
-		MUSART_SendString(string);
+		MUSART_SendString(USART_PERIPH_1 , string);
 	}
 
 	return 0;

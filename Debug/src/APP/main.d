@@ -59,7 +59,9 @@ src/APP/main.o: ../src/APP/main.c ../src/APP/../MCAL/RCC/RCC_int.h \
  ../src/APP/../HAL/STP/STP_int.h ../src/APP/../MCAL/USART/USART_int.h \
  ../src/APP/../MCAL/USART/../../LIB/STD_TYPES.h \
  ../src/APP/../MCAL/USART/../../LIB/BIT_MATH.h \
- ../src/APP/../MCAL/USART/../../LIB/Delay.h
+ ../src/APP/../MCAL/USART/../../LIB/Delay.h \
+ ../src/APP/../MCAL/USART/../../LIB/MATH_Fn.h \
+ ../src/APP/../MCAL/USART/../../LIB/STD_TYPES.h
 
 ../src/APP/../MCAL/RCC/RCC_int.h:
 
@@ -200,3 +202,7 @@ e:\iti\ arm\ course\workspace2\arm_stm\src\lib\std_types.h:
 ../src/APP/../MCAL/USART/../../LIB/BIT_MATH.h:
 
 ../src/APP/../MCAL/USART/../../LIB/Delay.h:
+
+../src/APP/../MCAL/USART/../../LIB/MATH_Fn.h:
+
+../src/APP/../MCAL/USART/../../LIB/STD_TYPES.h:

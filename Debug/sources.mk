@@ -33,6 +33,7 @@ src/HAL/LedMatrix \
 src/HAL/NEC \
 src/HAL/STP \
 src/HAL/SevenSegment \
+src/LIB \
 src/MCAL/EXTI \
 src/MCAL/GPIO \
 src/MCAL/NVIC \

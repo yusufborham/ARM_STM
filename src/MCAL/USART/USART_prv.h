@@ -34,6 +34,15 @@ typedef struct {
 } USART_BaudRate_cfg_t;
 
 typedef struct {
+    volatile u8 USART_TX_BUFFER[MAX_TX_BUFFER_SIZE] ;
+    volatile u8 USART_RX_BUFFER[MAX_RX_BUFFER_SIZE] ;
+    volatile u8 txPutPtr ;
+    volatile u8 txGetPtr ;
+    volatile u8 rxPutPtr ;
+    volatile u8 rxGetPtr ;
+}USART_Buffer_t ;
+
+typedef struct {
     volatile u32 SR ;
     volatile u32 DR ;
     volatile u32 BRR ;

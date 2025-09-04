@@ -38,6 +38,19 @@ int main(void) {
 
 	MSYSTICK_vChooseClockSource(SYSTICK_CLK_SOURCE_AHB_DIV_1);
 
+	MNVIC_vEnableInterrupt(USART1_IRQn);
+
+	GPIOx_PinConfig_t ledPin = {
+		.Port = GPIO_A,
+		.Pin = GPIO_PIN_0,
+		.Mode = GPIO_MODE_OUTPUT,
+		.OutputType = GPIO_OTYPE_PP,
+		.AltFunc = GPIO_AF0,
+		.Speed = GPIO_SPEED_HIGH,
+		.PullType = GPIO_PUPD_NONE
+	};
+	MGPIO_vPinInit(&ledPin);
+
 	// set GPIO A9 to be used as a TX for the USART1 
 
 	GPIOx_PinConfig_t txPin = {
@@ -49,25 +62,48 @@ int main(void) {
 
 	MGPIO_vPinInit(&txPin);
 
+		GPIOx_PinConfig_t rxPin = {
+		.Port = GPIO_A,
+		.Pin = GPIO_PIN_10,
+		.Mode = GPIO_MODE_ALTERNATE,	
+		.AltFunc = GPIO_AF7
+	};
+
+	MGPIO_vPinInit(&rxPin);
+
 	USART_Config_t usart1_cfg = {
 		.peripheral = USART_PERIPH_1,
-		.baudRate = USART_BAUDRATE_9600,
+		.baudRate = USART_BAUDRATE_115200,
 		.wordLength = USART_WORD_LENGTH_8BITS,
 		.stopBits = USART_STOP_BITS_1,
 		.parity = USART_PARITY_NONE,
 		.sampleRate = USART_SAMPLE_16_TIMES,
 		.sampleMethod = USART_SAMPLE_METHOD_THREE_BITS,
-		.mode = USART_MODE_TX_ONLY,
+		.mode = USART_MODE_TX_RX,
 		.fclk = USART_CLK_25MHZ
 	};
 
 	MUSART_Init(&usart1_cfg);
 
-	char string[] = "Hello" ; 
+	u8 buffer[12];  // Buffer to hold the string representation of the integer
+	
+	u8 cnt = 0 ;
 	while (1) {
-		MUSART_SendString(USART_PERIPH_1 , string);
-	}
+		if (MUSART_u8BytesAvailable(&usart1_cfg)) {
+				f32 receivedValue = MUSART_f32ParseFloatBlocking(&usart1_cfg, 1000) + 2.5;
+				ftoa(receivedValue, buffer);
+				MUSART_u8WriteString(&usart1_cfg, buffer);
+				MUSART_u8WriteByte(&usart1_cfg, '\n');
+				MUSART_u8WriteByte(&usart1_cfg, '\r');
+				itoa(cnt, buffer);
+				MUSART_u8WriteString(&usart1_cfg , buffer);
+				MUSART_u8WriteByte(&usart1_cfg, '\n');
+				MUSART_u8WriteByte(&usart1_cfg, '\r');
+				cnt++;
 
-	return 0;
+			}
+		}
+
+return 0;
 }
 

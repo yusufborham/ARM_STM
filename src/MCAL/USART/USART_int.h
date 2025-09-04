@@ -84,8 +84,16 @@ typedef struct {
 
 
 USART_Status_t MUSART_Init(USART_Config_t* cfg);
-USART_Status_t MUSART_SendData(USART_Peripheral_t A_peripheral , u8 data);
-u8 MUSART_ReceiveData(USART_Peripheral_t A_peripheral);
-void MUSART_SendString(USART_Peripheral_t A_peripheral , const char* str);
+
+
+u8 MUSART_u8ReadByte(USART_Config_t* cfg) ;
+u8 MUSART_u8BytesAvailable(USART_Config_t* cfg);
+USART_Status_t MUSART_u8WriteByte(USART_Config_t* cfg , u8 A_u8ByteToPush);
+USART_Status_t MUSART_u8WriteString(USART_Config_t* cfg , u8* A_u8StringToPush);
+u8* MUSART_u8ReadStringUntil(USART_Config_t* cfg , u8 A_u8TerminatingChar);
+USART_Status_t MUSART_vFlush(USART_Config_t* cfg);
+s32 MUSART_u32ParseIntBlocking(USART_Config_t* cfg, u32 timeout_ms);
+s32 MUSART_u32ParseIntNonBlocking(USART_Config_t* cfg);
+f32 MUSART_f32ParseFloatBlocking(USART_Config_t* cfg, u32 timeout_ms);
 
 #endif /* USART_INT_H */

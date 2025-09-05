@@ -279,6 +279,21 @@ void MSYSTICK_vSetIntervalMultiMicroseconds(u32 A_u32Interval, void (*A_pvCallBa
   * **`A_u32Interval`**: The interval duration in microseconds.
   * **`A_pvCallBack`**: A pointer to the callback function to execute at each interval.
 
+### `MSYSTICK_millis`
+Returns the number of milliseconds that have elapsed since the SysTick timer was enabled.
+
+```c  
+u32 MSYSTICK_millis();
+
+```
+### `MSYSTICK_vEnableBackgroundMillis`
+
+```c
+void MSYSTICK_vEnableBackgroundMillis();
+```
+Enables a background millisecond counter using SysTick. This allows `MSYSTICK_millis()` to return the elapsed time since enabled.
+
+
 ### Other SysTick Functions
 
   * **`MSYSTICK_vEnableTimer()`**: Enables the SysTick timer counter.
@@ -414,3 +429,218 @@ void MNVIC_vSetPriority(u8 A_u8InterruptID, u8 A_u8GroupPriority, u8 A_u8SubGrou
   * **`void MNVIC_vSetPendingFlag(u8 A_u8InterruptID)`**: Manually sets the pending flag for an interrupt (for software-triggered interrupts).
   * **`void MNVIC_vClearPendingFlag(u8 A_u8InterruptID)`**: Clears the pending flag for an interrupt.
   * **`u8 MNVIC_u8GetActiveFlag(u8 A_u8InterruptID)`**: Returns 1 if the specified interrupt is currently being serviced.
+
+ 
+---
+
+## USART - Functions
+
+The Universal Synchronous/Asynchronous Receiver/Transmitter (USART) driver provides APIs to configure and use USART peripherals for serial communication. It supports multiple baud rates, word lengths, stop bits, parity modes, and operational modes (TX, RX, TX/RX).
+
+---
+
+### `MUSART_Init`
+
+Initializes the USART peripheral with the specified configuration.
+
+```c
+USART_Status_t MUSART_Init(USART_Config_t* cfg);
+```
+
+* **`cfg`**: Pointer to a `USART_Config_t` structure containing:
+
+  * Clock source (`USART_CLK_8MHZ`, `USART_CLK_16MHZ`, …)
+  * Peripheral (`USART_PERIPH_1`, `USART_PERIPH_2`, `USART_PERIPH_6`)
+  * Baud rate (`USART_BAUDRATE_9600`, `USART_BAUDRATE_115200`, etc.)
+  * Word length (8 or 9 bits)
+  * Stop bits (0.5, 1, 1.5, 2)
+  * Parity (`NONE`, `EVEN`, `ODD`)
+  * Oversampling (8 or 16)
+  * Sampling method (1-bit or 3-bit majority)
+  * Mode (TX only, RX only, TX/RX)
+
+**Returns:**
+
+* `USART_OK` if initialized successfully.
+* Error codes: `USART_ERR_NULLCFG`, `USART_ERR_BAD_PERIPH`, `USART_ERR_TIMEOUT`.
+
+**Notes:**
+
+* GPIO pins for TX/RX must be configured before calling.
+* NVIC interrupts must be enabled separately if used.
+
+---
+
+### `MUSART_u8ReadByte`
+
+Reads a single byte from the USART receive buffer.
+
+```c
+u8 MUSART_u8ReadByte(USART_Peripheral_t A_thisID);
+```
+
+* **`A_thisID`**: USART peripheral (`USART_PERIPH_1`, `USART_PERIPH_2`, `USART_PERIPH_6`).
+
+**Returns:**
+
+* The received byte, or `0` if no data is available.
+
+---
+
+### `MUSART_u8BytesAvailable`
+
+Checks how many bytes are available in the receive buffer.
+
+```c
+u8 MUSART_u8BytesAvailable(USART_Peripheral_t A_thisID);
+```
+
+* **`A_thisID`**: USART peripheral.
+
+**Returns:**
+
+* Number of bytes currently available in the RX buffer.
+
+---
+
+### `MUSART_u8WriteByte`
+
+Writes a single byte to the transmit buffer.
+
+```c
+USART_Status_t MUSART_u8WriteByte(USART_Peripheral_t A_thisID, u8 A_u8ByteToPush);
+```
+
+* **`A_thisID`**: USART peripheral.
+* **`A_u8ByteToPush`**: The byte to transmit.
+
+**Returns:**
+
+* `USART_OK` on success.
+* Error code if the TX buffer is full.
+
+---
+
+### `MUSART_u8WriteString`
+
+Writes a null-terminated string to the transmit buffer.
+
+```c
+USART_Status_t MUSART_u8WriteString(USART_Peripheral_t A_thisID, const u8* A_u8StringToPush);
+```
+
+* **`A_thisID`**: USART peripheral.
+* **`A_u8StringToPush`**: Pointer to the null-terminated string.
+
+**Returns:**
+
+* `USART_OK` on success.
+* Error code if buffer overflows.
+
+---
+
+### `MUSART_u8ReadStringUntil`
+
+Reads characters until a terminating character or buffer limit is reached.
+
+```c
+USART_Status_t MUSART_u8ReadStringUntil(USART_Peripheral_t A_thisID, 
+                                        u8 *A_u8pStringBuffer,
+                                        u32 A_u32BufferSize,
+                                        u8 A_u8TerminatingChar);
+```
+
+* **`A_thisID`**: USART peripheral.
+* **`A_u8pStringBuffer`**: Pointer to buffer to store the string.
+* **`A_u32BufferSize`**: Size of the buffer.
+* **`A_u8TerminatingChar`**: Character indicating end of string.
+
+**Returns:**
+
+* `USART_OK` if successful.
+* `USART_STRING_BUFFER_OVF` if buffer overflows.
+
+**Notes:**
+
+* The string is null-terminated.
+
+---
+
+### `MUSART_vFlush`
+
+Flushes both transmit and receive buffers.
+
+```c
+USART_Status_t MUSART_vFlush(USART_Peripheral_t A_thisID);
+```
+
+* **`A_thisID`**: USART peripheral.
+
+**Returns:**
+
+* `USART_OK` on success.
+
+---
+
+### `MUSART_u32ParseIntBlocking`
+
+Parses an integer from incoming data with a timeout.
+
+```c
+USART_Status_t MUSART_u32ParseIntBlocking(USART_Peripheral_t A_thisID, 
+                                          s32* A_ps32Result,  
+                                          u32 timeout_ms);
+```
+
+* **`A_thisID`**: USART peripheral.
+* **`A_ps32Result`**: Pointer to store parsed integer.
+* **`timeout_ms`**: Timeout in milliseconds.
+
+**Returns:**
+
+* `USART_OK` if successful.
+* `USART_ERR_TIMEOUT` if timeout occurred.
+
+---
+
+### `MUSART_u8ParseInt`
+
+Non-blocking integer parser for incoming data.
+
+```c
+USART_ParsingStatus_t MUSART_u8ParseInt(USART_Peripheral_t A_thisID, s32* A_ps32Result);
+```
+
+* **`A_thisID`**: USART peripheral.
+* **`A_ps32Result`**: Pointer to store parsed integer.
+
+**Returns (Parsing status):**
+
+* `STILL_PARSING`
+* `DONE_PARSING`
+* `INVALID_ARGUMENT`
+* `TIMEOUT_OCCURRED`
+
+---
+### Configuration Example
+
+```c
+// USART_cfg.h
+
+#ifndef USART_CFG_H
+#define USART_CFG_H
+
+// Baudrate configuration
+#define USART_BAUDRATE 9600
+
+// Word length configuration
+#define USART_WORD_LENGTH 8
+
+// Stop bits configuration
+#define USART_STOP_BITS 1
+
+// Parity configuration
+#define USART_PARITY NONE
+
+#endif // USART_CFG_H
+```

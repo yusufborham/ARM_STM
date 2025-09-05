@@ -11,5 +11,7 @@
 
 #define STRING_BUFFER_MAX_SIZE 256
 
+#define OVERWRITE_OLD_DATA_TX 1  // if set to 1, new data will overwrite old data when buffer is full. If set to 0, new data will be discarded when buffer is full.
+#define OVERWRITE_OLD_DATA_RX 1  // if set to 1, new data will overwrite old data when buffer is full. If set to 0, new data will be discarded when buffer is full.
 
 #endif /* USART_CFG_H */

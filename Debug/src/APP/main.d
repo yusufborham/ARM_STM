@@ -29,8 +29,11 @@ src/APP/main.o: ../src/APP/main.c ../src/APP/../MCAL/RCC/RCC_int.h \
  ../src/APP/../MCAL/SYSCFG/../GPIO/GPIO_int.h \
  ../src/APP/../MCAL/SYSCFG/SYSCFG_prv.h \
  ../src/APP/../MCAL/SYSTICK/SYSTICK_int.h \
+ ../src/APP/../MCAL/SYSTICK/SYSTICK_prv.h \
  ../src/APP/../MCAL/SYSTICK/../../LIB/STD_TYPES.h \
  ../src/APP/../MCAL/SYSTICK/../../LIB/BIT_MATH.h \
+ ../src/APP/../MCAL/SYSTICK/SYSTICK_cfg.h \
+ ../src/APP/../MCAL/SYSTICK/SYSTICK_int.h \
  ../src/APP/../MCAL/SYSTICK/SYSTICK_prv.h \
  ../src/APP/../HAL/LedMatrix/ledmatrix_int.h \
  ../src/APP/../HAL/LedMatrix/../../LIB/STD_TYPES.h \
@@ -61,7 +64,9 @@ src/APP/main.o: ../src/APP/main.c ../src/APP/../MCAL/RCC/RCC_int.h \
  ../src/APP/../MCAL/USART/../../LIB/BIT_MATH.h \
  ../src/APP/../MCAL/USART/../../LIB/Delay.h \
  ../src/APP/../MCAL/USART/../../LIB/MATH_Fn.h \
- ../src/APP/../MCAL/USART/../../LIB/STD_TYPES.h
+ ../src/APP/../MCAL/USART/../../LIB/STD_TYPES.h \
+ ../src/APP/../MCAL/USART/USART_prv.h \
+ ../src/APP/../MCAL/USART/USART_cfg.h
 
 ../src/APP/../MCAL/RCC/RCC_int.h:
 
@@ -131,9 +136,15 @@ e:\iti\ arm\ course\workspace2\arm_stm\src\lib\std_types.h:
 
 ../src/APP/../MCAL/SYSTICK/SYSTICK_int.h:
 
+../src/APP/../MCAL/SYSTICK/SYSTICK_prv.h:
+
 ../src/APP/../MCAL/SYSTICK/../../LIB/STD_TYPES.h:
 
 ../src/APP/../MCAL/SYSTICK/../../LIB/BIT_MATH.h:
+
+../src/APP/../MCAL/SYSTICK/SYSTICK_cfg.h:
+
+../src/APP/../MCAL/SYSTICK/SYSTICK_int.h:
 
 ../src/APP/../MCAL/SYSTICK/SYSTICK_prv.h:
 
@@ -206,3 +217,7 @@ e:\iti\ arm\ course\workspace2\arm_stm\src\lib\std_types.h:
 ../src/APP/../MCAL/USART/../../LIB/MATH_Fn.h:
 
 ../src/APP/../MCAL/USART/../../LIB/STD_TYPES.h:
+
+../src/APP/../MCAL/USART/USART_prv.h:
+
+../src/APP/../MCAL/USART/USART_cfg.h:

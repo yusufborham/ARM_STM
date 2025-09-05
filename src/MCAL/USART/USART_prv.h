@@ -2,6 +2,7 @@
 #define USART_PRV_H
 
 #include "../../LIB/STD_TYPES.h"
+#include "USART_cfg.h"
 
 #define MEGA(x)   ((x) * 1000000UL)
 
@@ -9,6 +10,7 @@
 #define USART2_BASE_ADDRESS 0x40004400
 #define USART6_BASE_ADDRESS 0x40011400
 
+#define USART_NUMBER 3
 typedef enum {
     USART_FLAG_PARITY_ERROR                 = 0,
     USART_FLAG_FRAME_ERROR                  = 1,
@@ -41,6 +43,37 @@ typedef struct {
     volatile u8 rxPutPtr ;
     volatile u8 rxGetPtr ;
 }USART_Buffer_t ;
+
+typedef struct {
+    s32 result ;
+    u8 isFirstByte ;
+    u8 sign ;
+    u8 isParsing ;
+    u32 entryTime ;
+} USART_parsingIntStatus_t ;
+
+typedef struct {
+    u8 Tx_enabled ;
+    u8 Rx_enabled ;
+} USART_InterruptStatus_t;
+
+typedef enum {
+    USART_CLK_8MHZ  = 8,
+    USART_CLK_16MHZ = 16,
+    USART_CLK_25MHZ = 25,
+    USART_CLK_32MHZ = 32,
+    USART_CLK_42MHZ = 42,
+    USART_CLK_48MHZ = 48,
+    USART_CLK_64MHZ = 64
+}USART_clk_t;
+
+typedef enum {
+    USART_PERIPH_1  = 0,
+    USART_PERIPH_2  = 1,
+    USART_PERIPH_6  = 2
+}USART_Peripheral_t;
+
+
 
 typedef struct {
     volatile u32 SR ;

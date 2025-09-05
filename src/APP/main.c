@@ -30,15 +30,12 @@ int main(void) {
 	// enable clock for GPIOA, GPIOB and SYSCFG
 	MRCC_vInit();
 	MRCC_vSetAHBPrescaler(AHB_PRESCALER_DIVIDE_1);
+	
 
 	MRCC_vEnableClk(RCC_AHB1, GPIOAEN);
 	MRCC_vEnableClk(RCC_AHB1, GPIOBEN);
 	MRCC_vEnableClk(RCC_APB2, SYSCFGEN);
 	MRCC_vEnableClk(RCC_APB2, USART1EN);
-
-	MSYSTICK_vChooseClockSource(SYSTICK_CLK_SOURCE_AHB_DIV_1);
-
-	MNVIC_vEnableInterrupt(USART1_IRQn);
 
 	GPIOx_PinConfig_t ledPin = {
 		.Port = GPIO_A,
@@ -85,25 +82,24 @@ int main(void) {
 
 	MUSART_Init(&usart1_cfg);
 
-	u8 buffer[12];  // Buffer to hold the string representation of the integer
-	
-	u8 cnt = 0 ;
+	u8 buffer[50];  // Buffer to hold the string representation of the integer
+	const u8 buffer2[] = "Hello Borham how are you \r\n";
+	u8 str[] = "Hello from USART1\r\n";
+	MUSART_u8WriteString(USART_PERIPH_1 , str);
+
 	while (1) {
-		if (MUSART_u8BytesAvailable(&usart1_cfg)) {
-				f32 receivedValue = MUSART_f32ParseFloatBlocking(&usart1_cfg, 1000) + 2.5;
-				ftoa(receivedValue, buffer);
-				MUSART_u8WriteString(&usart1_cfg, buffer);
-				MUSART_u8WriteByte(&usart1_cfg, '\n');
-				MUSART_u8WriteByte(&usart1_cfg, '\r');
-				itoa(cnt, buffer);
-				MUSART_u8WriteString(&usart1_cfg , buffer);
-				MUSART_u8WriteByte(&usart1_cfg, '\n');
-				MUSART_u8WriteByte(&usart1_cfg, '\r');
-				cnt++;
+		
+		if (MUSART_u8BytesAvailable(USART_PERIPH_1)){
+			MUSART_u8ReadStringUntil(USART_PERIPH_1 , buffer , 50 , '\n') ;
 
+			if (buffer[2] == 'a')	{
+				MGPIO_vSetPinValue(GPIO_A , GPIO_PIN_0 , GPIO_PIN_HIGH);
+				MUSART_u8WriteString(USART_PERIPH_1 , buffer);
 			}
+			else if (buffer[0] == 'b')
+				MGPIO_vSetPinValue(GPIO_A , GPIO_PIN_0 , GPIO_PIN_LOW);
 		}
-
+	}
 return 0;
 }
 

@@ -1,11 +1,16 @@
 #include "SYSTICK_int.h"
 #include "SYSTICK_prv.h"
+#include "SYSTICK_cfg.h"
 
 u32 G_u32ClockSource = 0;
 
 volatile u8 G_u8Flag = 0;
 
+volatile u32 G_u32Millis = 0 ;
+
 void (*G_pvCallBack)(void) = NULL;
+
+void MSYSTICK_vHandlerRoutine(void) ;
 
 u8 MSYSTICK_u8GetFlag(){
     return (GET_BIT(SYSTICK->CTRL , COUNT_FLAG));  
@@ -180,12 +185,6 @@ void MSYSTICK_vSetIntervalMulti( u32 A_u32Interval , void (*A_pvCallBack)(void))
 
 }
 
-void MSYSTICK_vSetOVFCallback(void (*A_pvCallBack)(void)){
-    G_u8Flag = SYSTICK_NORMAL_MODE;
-    MSYSTICK_vEnableOvfInterrupt();
-    G_pvCallBack = A_pvCallBack;
-}
-
 void MSYSTICK_vSetIntervalMultiMicroseconds( u32 A_u32Interval , void (*A_pvCallBack)(void)){
     MSYSTICK_vEnableOvfInterrupt();
     // SET THE FLAG TO SYSTICK_RUNNING_MULTI
@@ -240,6 +239,23 @@ void MSYSTICK_vSetIntervalSingle(u32 A_u32Interval, void (*A_pvCallBack)(void)){
 
     }
 
+}
+
+u32 MSYSTICK_millis(){
+    return G_u32Millis;
+}
+
+void MSYSTICK_vHandlerRoutine(void){
+    G_u32Millis++;
+}
+
+void MSYSTICK_vEnableBckgroundMillis(){
+    #if SYSTICK_RUN_MILLIS_FUNCTION == 1
+        MSYSTICK_vChooseClockSource(SYSTICK_CLK_SOURCE_AHB_DIV_8);
+        MSYSTICK_vSetIntervalMulti(1 , MSYSTICK_vHandlerRoutine);  
+    #else 
+        return;
+    #endif
 }
 
 void SysTick_Handler(void){

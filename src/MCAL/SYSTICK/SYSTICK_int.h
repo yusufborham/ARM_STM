@@ -11,6 +11,9 @@
 #ifndef SYSTICK_INT_H
 #define SYSTICK_INT_H 
 
+#include "SYSTICK_prv.h"
+#include "SYSTICK_cfg.h"
+
 #include "../../LIB/STD_TYPES.h"
 #include "../../LIB/BIT_MATH.h"
 
@@ -160,6 +163,20 @@ void MSYSTICK_vSetIntervalSingle(u32 A_u32Interval, void (*A_pvCallBack)(void));
  */
 void MSYSTICK_vSetIntervalMultiMicroseconds( u32 A_u32Interval , void (*A_pvCallBack)(void));
 
+/*
+    * @brief Get the number of milliseconds since SysTick was initialized.
+    * @return u32 - Number of milliseconds elapsed.
+    * @note This function requires that background millis counting is enabled via MSYSTICK_vEnableBckgroundMillis().
+*/
+
+u32 MSYSTICK_millis();
+
+/*
+ * @brief Enable background millis counting using SysTick.
+ * @note This function sets up SysTick to increment a millisecond counter in the background.
+ */
+
+void MSYSTICK_vEnableBckgroundMillis();
 
 
 #endif /* SYSTICK_INT_H */

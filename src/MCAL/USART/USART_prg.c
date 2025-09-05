@@ -5,21 +5,6 @@
 #include "../NVIC/NVIC_int.h"
 #include "../SYSTICK/SYSTICK_int.h"
 
-// fixes 
-/*
-*1 the global string buffer must be handled for all USARTS
-*2 for most of the functions we only need to pass the ID only not the whole struct
-*3 the timeout calculations are not correct (either use a timer or calculate the correct loop time )
-*4 you may not use the get flag status functions as it increases overhead
-*5 Try handling any states for any function into a struct ( for example in the parseFloat function mant states and values are inside )
-*6 when incrementing the ptr ( we are not doing it atomically ) so we must disable the interrupts 
-*7 when writing a byte disable the read interrupt 
-*8 if the buffer is full a error must be sent 
-*9 handlers down are duplicated so we must handle it by only one function by calling a function in the handler which takes the peripheral ID only 
-
-
-
-*/
 
 static USART_parsingIntStatus_t G_aUSART_parsingStates[USART_NUMBER] = {{0}};
 static USART_Buffer_t G_aUSART_Buffer_data[USART_NUMBER] = {{0}};

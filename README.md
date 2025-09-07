@@ -621,6 +621,50 @@ USART_ParsingStatus_t MUSART_u8ParseInt(USART_Peripheral_t A_thisID, s32* A_ps32
 * `INVALID_ARGUMENT`
 * `TIMEOUT_OCCURRED`
 
+
+### `MUSART_u8ReadStringUntilBufferPatern`
+
+Reads a string from the USART receive buffer until a specified terminating pattern is encountered or the buffer limit is reached.
+
+**Notes**: 
+
+- The function reads characters from the receive buffer and stores them in A_u8pStringBuffer until the terminating pattern is encountered or the buffer limit (STRING_BUFFER_MAX_SIZE) is reached. The resulting string in A_u8pStringBuffer is null-terminated. If the buffer limit is reached before encountering the terminating pattern, it returns USART_STRING_BUFFER_OVF. Ensure that A_u8pStringBuffer has enough space to hold the incoming string and the null terminator.
+
+- The function is non-blocking Synchronous function and can be called repeatedly to continue parsing until the terminating pattern is found in order to use the input buffer you must be sure that the function returned  `DONE_PARSING` if not then you cant use the buffer as it is still being filled.
+
+for example 
+
+``` c
+if (MUSART_u8ReadStringUntilBufferPatern(USART_PERIPH_1 , buffer , 50 , buffer2) == DONE_PARSING) {
+			MUSART_u8WriteString(USART_PERIPH_1 , buffer);
+			if (buffer[0] == 'o' && buffer[1] == 'n') {
+				MGPIO_vSetPinValue(GPIO_A , GPIO_PIN_0 , GPIO_PIN_HIGH);	
+			}
+			else if (buffer[0] == 'o' && buffer[1] == 'f' && buffer[2] == 'f') {
+				MGPIO_vSetPinValue(GPIO_A , GPIO_PIN_0 , GPIO_PIN_LOW);
+			}
+			else {
+				// Ignore unknown commands
+			}
+}
+```
+
+``` c
+USART_Status_t MUSART_u8ReadStringUntilBufferPatern(USART_Peripheral_t A_thisID, u8 *A_u8pStringBuffer, u32 A_u32BufferSize ,const u8 *A_u8pTerminatingBuffer);
+```
+
+* **`A_thisID`**: USART peripheral.
+* **`A_u8pStringBuffer`**: Pointer to buffer to store the string
+* **`A_u32BufferSize`**: Size of the buffer.
+* **`A_u8pTerminatingBuffer`**: Pointer to the terminating string pattern
+**Returns:**
+* `DONE_PARSING` if successful.
+* `USART_STRING_BUFFER_OVF` if buffer overflows.
+* `STILL_PARSING` if the terminating pattern is not yet found.
+* `INVALID_ARGUMENT` if the provided arguments are invalid.
+* `TIMEOUT_OCCURRED` if a timeout occurs during parsing.
+* `INVALID_BUFFER_SIZE` if the provided buffer size is invalid.
+* `USART_ERR_BAD_PERIPH` if the specified peripheral is invalid.
 ---
 ### Configuration Example
 

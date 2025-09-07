@@ -57,6 +57,14 @@ typedef struct {
     u8 Rx_enabled ;
 } USART_InterruptStatus_t;
 
+typedef struct {
+    u32 idx ;
+    u32 jdx  ;
+    u8  entered  ;
+    u32 startIdx  ;
+    u8  exit  ;
+}USART_StringFunctionStatus_t ;
+
 typedef enum {
     USART_CLK_8MHZ  = 8,
     USART_CLK_16MHZ = 16,

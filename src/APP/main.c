@@ -83,21 +83,33 @@ int main(void) {
 	MUSART_Init(&usart1_cfg);
 
 	u8 buffer[50];  // Buffer to hold the string representation of the integer
-	const u8 buffer2[] = "Hello Borham how are you \r\n";
+	const u8 buffer2[] = "OK";
 	u8 str[] = "Hello from USART1\r\n";
 	MUSART_u8WriteString(USART_PERIPH_1 , str);
-
 	while (1) {
-		
-		if (MUSART_u8BytesAvailable(USART_PERIPH_1)){
-			MUSART_u8ReadStringUntil(USART_PERIPH_1 , buffer , 50 , '\n') ;
 
-			if (buffer[2] == 'a')	{
-				MGPIO_vSetPinValue(GPIO_A , GPIO_PIN_0 , GPIO_PIN_HIGH);
-				MUSART_u8WriteString(USART_PERIPH_1 , buffer);
+		if (MUSART_u8ReadStringUntilBufferPatern(USART_PERIPH_1 , buffer , 50 , buffer2) == DONE_PARSING) {
+			// Echo the received string back
+			//MUSART_u8WriteString(USART_PERIPH_1 , buffer);
+			// Check if the received string is "on" or "off"
+			// If "on", turn on the LED connected to GPIOA pin 0
+			// If "off", turn off the LED connected to GPIOA pin 0
+			// Otherwise, ignore the command
+			// Example commands: "on", "off"
+			// Note: Ensure that the commands are null-terminated strings
+			// before comparing them.
+			// Here, we assume the commands are sent as "on\r\n" and "off\r\n"
+			// so we check only the first two characters for simplicity.
+			MUSART_u8WriteString(USART_PERIPH_1 , buffer);
+			if (buffer[0] == 'o' && buffer[1] == 'n') {
+				MGPIO_vSetPinValue(GPIO_A , GPIO_PIN_0 , GPIO_PIN_HIGH);	
 			}
-			else if (buffer[0] == 'b')
+			else if (buffer[0] == 'o' && buffer[1] == 'f' && buffer[2] == 'f') {
 				MGPIO_vSetPinValue(GPIO_A , GPIO_PIN_0 , GPIO_PIN_LOW);
+			}
+			else {
+				// Ignore unknown commands
+			}
 		}
 	}
 return 0;

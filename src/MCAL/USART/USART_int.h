@@ -55,15 +55,21 @@ typedef enum {
     USART_ERR_BAD_PERIPH,
     USART_ERR_TIMEOUT , 
     USART_STRING_BUFFER_OVF,
-    USART_ERR_BUFFER_FULL
-} USART_Status_t;
-
-typedef enum {
+    USART_ERR_BUFFER_FULL ,
     STILL_PARSING ,
     DONE_PARSING ,
-    INVALID_ARGUMENT ,
-    TIMEOUT_OCCURRED 
-} USART_ParsingStatus_t ;
+    INVALID_ARGUMENT,
+    TIMEOUT_OCCURRED,
+    INVALID_BUFFER_SIZE
+
+} USART_Status_t;
+
+// typedef enum {
+//     STILL_PARSING ,
+//     DONE_PARSING ,
+//     INVALID_ARGUMENT ,
+//     TIMEOUT_OCCURRED 
+// } USART_ParsingStatus_t ;
 
 
 /*
@@ -206,6 +212,19 @@ USART_Status_t MUSART_u8WriteString(USART_Peripheral_t A_thisID, const u8* A_u8S
 USART_Status_t MUSART_u8ReadStringUntil(USART_Peripheral_t A_thisID, u8 *A_u8pStringBuffer,u32 A_u32BufferSize ,u8 A_u8TerminatingChar);
 
 /*
+@brief: Reads a string from the USART receive buffer until a specified terminating pattern is encountered or the buffer limit is reached.
+@param: A_thisID - The USART peripheral identifier (USART_PERIPH_1, USART_PERIPH_2, or USART_PERIPH_6).
+@param: A_u8pStringBuffer - Pointer to the buffer where the received string will be stored.
+@param: A_u32BufferSize - The size of the buffer pointed to by A_u8pStringBuffer.
+@param: A_u8pTerminatingBuffer - Pointer to the buffer containing the terminating pattern.
+@return: USART_Status_t indicating success or error code.
+@note: The function reads characters from the receive buffer and stores them in A_u8pStringBuffer until the terminating pattern is encountered or the buffer limit (STRING_BUFFER_MAX_SIZE) is reached.
+       The resulting string in A_u8pStringBuffer is null-terminated.
+       If the buffer limit is reached before encountering the terminating pattern, it returns USART_STRING_BUFFER_OVF.
+       Ensure that A_u8pStringBuffer has enough space to hold the incoming string and the null terminator.
+*/
+USART_Status_t MUSART_u8ReadStringUntilBufferPatern(USART_Peripheral_t A_thisID, u8 *A_u8pStringBuffer, u32 A_u32BufferSize ,const u8 *A_u8pTerminatingBuffer);
+/*
 @brief: Flushes the USART transmit and receive buffers.
 @param: A_thisID - The USART peripheral identifier (USART_PERIPH_1, USART_PERIPH_2, or USART_PERIPH_6).
 @return: USART_Status_t indicating success or error code.
@@ -213,7 +232,7 @@ USART_Status_t MUSART_u8ReadStringUntil(USART_Peripheral_t A_thisID, u8 *A_u8pSt
 USART_Status_t MUSART_vFlush(USART_Peripheral_t A_thisID);
 
 USART_Status_t MUSART_u32ParseIntBlocking(USART_Peripheral_t A_thisID,  s32* A_ps32Result,  u32 timeout_ms);
-USART_ParsingStatus_t MUSART_u8ParseInt(USART_Peripheral_t A_thisID , s32* A_ps32Result) ;
+USART_Status_t MUSART_u8ParseInt(USART_Peripheral_t A_thisID , s32* A_ps32Result) ;
 // f32 MUSART_f32ParseFloatBlocking(USART_Peripheral_t A_thisID, u32 timeout_ms);
 
 #endif /* USART_INT_H */

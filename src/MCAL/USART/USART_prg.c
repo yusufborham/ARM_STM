@@ -210,7 +210,7 @@ u8 MUSART_u8ReadByte(USART_Peripheral_t A_thisID){
         MUSART_vDisableNVIC(A_thisID);
          // critical section: disable RXNE interrupt only
         L_u8readData = L_spUSART_buffData->USART_RX_BUFFER[L_spUSART_buffData->rxGetPtr++];
-        L_spUSART_buffData->rxGetPtr =(L_spUSART_buffData->rxGetPtr ) % MAX_RX_BUFFER_SIZE ;
+        L_spUSART_buffData->rxGetPtr =(L_spUSART_buffData->rxGetPtr ) % USART_MAX_RX_BUFFER_SIZE ;
         MUSART_vEnableNVIC(A_thisID);
          // re-enable RXNE interrupt
         return L_u8readData ;
@@ -220,7 +220,7 @@ u8 MUSART_u8BytesAvailable(USART_Peripheral_t A_thisID){
     if (A_thisID < USART_PERIPH_1 || A_thisID > USART_PERIPH_6) return USART_ERR_BAD_PERIPH ;
     USART_Buffer_t* L_spUSART_buffData = &G_aUSART_Buffer_data[A_thisID] ;
 
-    return (L_spUSART_buffData->rxPutPtr - L_spUSART_buffData->rxGetPtr + MAX_RX_BUFFER_SIZE) % MAX_RX_BUFFER_SIZE;
+    return (L_spUSART_buffData->rxPutPtr - L_spUSART_buffData->rxGetPtr + USART_MAX_RX_BUFFER_SIZE) % USART_MAX_RX_BUFFER_SIZE;
 }
 
 USART_Status_t MUSART_u8WriteByte(USART_Peripheral_t A_thisID , u8 A_u8ByteToPush) {
@@ -229,7 +229,7 @@ USART_Status_t MUSART_u8WriteByte(USART_Peripheral_t A_thisID , u8 A_u8ByteToPus
 
     USART_Buffer_t* L_spUSART_buffData = &G_aUSART_Buffer_data[A_thisID];
 
-    u16 nextPtr = (L_spUSART_buffData->txPutPtr + 1) % MAX_TX_BUFFER_SIZE;
+    u16 nextPtr = (L_spUSART_buffData->txPutPtr + 1) % USART_MAX_TX_BUFFER_SIZE;
     if (nextPtr == L_spUSART_buffData->txGetPtr) {
         return USART_ERR_BUFFER_FULL; // no space
     }
@@ -579,7 +579,7 @@ USART_Status_t USART_vHandlerRoutine(USART_Peripheral_t thisID){
      if (MUSART_GetFlagStatus(thisID , USART_FLAG_READ_DATA_READY)){                   // if there is data to read
         G_aUSART_Buffer_data[thisID].USART_RX_BUFFER[G_aUSART_Buffer_data[thisID].rxPutPtr] = USARTx->DR  ;       // reading from the data register clears the flag
         G_aUSART_Buffer_data[thisID].rxPutPtr++ ;
-        G_aUSART_Buffer_data[thisID].rxPutPtr = G_aUSART_Buffer_data[thisID].rxPutPtr % MAX_RX_BUFFER_SIZE ;       // constrain to the range of the buffer
+        G_aUSART_Buffer_data[thisID].rxPutPtr = G_aUSART_Buffer_data[thisID].rxPutPtr % USART_MAX_RX_BUFFER_SIZE ;       // constrain to the range of the buffer
     }
 
     if (MUSART_GetFlagStatus(thisID , USART_FLAG_TRANSMIT_DATA_REG_EMPTY)){
@@ -592,7 +592,7 @@ USART_Status_t USART_vHandlerRoutine(USART_Peripheral_t thisID){
 
         else {
             USARTx->DR = G_aUSART_Buffer_data[thisID].USART_TX_BUFFER[G_aUSART_Buffer_data[thisID].txGetPtr++] ;
-            G_aUSART_Buffer_data[thisID].txGetPtr = (G_aUSART_Buffer_data[thisID].txGetPtr) % MAX_TX_BUFFER_SIZE ;
+            G_aUSART_Buffer_data[thisID].txGetPtr = (G_aUSART_Buffer_data[thisID].txGetPtr) % USART_MAX_TX_BUFFER_SIZE ;
         }
     }
     return USART_OK ;

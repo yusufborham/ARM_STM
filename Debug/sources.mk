@@ -38,6 +38,7 @@ src/MCAL/EXTI \
 src/MCAL/GPIO \
 src/MCAL/NVIC \
 src/MCAL/RCC \
+src/MCAL/SPI \
 src/MCAL/SYSCFG \
 src/MCAL/SYSTICK \
 src/MCAL/USART \

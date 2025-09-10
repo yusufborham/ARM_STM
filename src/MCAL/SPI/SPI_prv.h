@@ -23,26 +23,25 @@ typedef struct
 
 }SPIx_MemMap_t;
 
-#define SPI1	((volatile SPIx_MemMap_t*)(SP1_BASE_ADDR))
-#define SPI2	((volatile SPIx_MemMap_t*)(SP2_BASE_ADDR))
-#define SPI3	((volatile SPIx_MemMap_t*)(SP3_BASE_ADDR))
-#define SPI4	((volatile SPIx_MemMap_t*)(SP4_BASE_ADDR))
+#define SPI1	((volatile SPIx_MemMap_t*)SP1_BASE_ADDR)
+#define SPI2	((volatile SPIx_MemMap_t*)SP2_BASE_ADDR)
+#define SPI3	((volatile SPIx_MemMap_t*)SP3_BASE_ADDR)
+#define SPI4	((volatile SPIx_MemMap_t*)SP4_BASE_ADDR)
 
 // defines for the bit positions
-#define CPHA	0
-#define CPOL	1
-#define MSTR	2
-#define BR	3
-#define SPE	6
+#define CPHA		0
+#define CPOL		1
+#define MSTR		2
+#define BR			3
+#define SPE			6
 #define LSBFIRST	7
-#define LSBFIRST	5
-#define SSI	8
-#define SSM	9
-#define RXONLY	10
-#define DFF	11
-#define CRCNEXT	12
-#define CRCEN	13
-#define BIDIOE	14
+#define SSI			8
+#define SSM			9
+#define RXONLY		10
+#define DFF			11
+#define CRCNEXT		12
+#define CRCEN		13
+#define BIDIOE		14
 #define BIDIMODE	15
 
 // SPI Status Register (SPI_CR2) bits
@@ -73,20 +72,66 @@ typedef struct
 
 #define SPI_PERIPHERAL_NUMBER 4  
 
+//   FRE      BSY      OVR      MODF   UDR     CHSIDE      TXE     RXNE 
+typedef enum {
+	RECIEVE_BUFFER_NOT_EMPTY_FLAG , 
+	TRANSMIT_BUFFER_EMPTY_FLAG ,
+	CHANNEL_SIDE_FLAG ,
+	UNDERRUN_ERROR_FLAG ,
+	CRC_ERROR_FLAG ,
+	MODE_FAULT_FLAG ,
+	OVERRUN_ERROR_FLAG ,
+	BUSY_FLAG ,
+	FRE_ERROR_FLAG
+}SPI_flag_t ;
+
+//  TXEIE    RXNEIE     ERRIE     FRF   SSOE     TXDMAEN      RXDMAEN 
+
+typedef enum {
+	RX_DMA_ENABLE_INT				= 0,
+	TX_DMA_ENABLE_INT 				= 1,
+	SS_OUTPUT_ENABLE_INT 			= 2,
+	FRAME_FORMAT_ERROR_INT 			= 4,
+	ERROR_INT 						= 5,
+	RECIEVE_BUFFER_NOT_EMPTY_INT 	= 6,
+	TRANSMIT_BUFFER_EMPTY_INT 		= 7
+}SPI_Interrupt_t;
+
+
 typedef struct {
 	SPI_Operation_mode_t thisMode ;
-
+	SPI_Data_frame_t dataFrame ;
+	u8 txInterruptStatus ;
+	u8 rxInterruptStatus ;
 }SPI_Control_status_t;
 
+typedef struct {
+	SPI_Data_frame_t dataFrame ; 
+	volatile u8 txPutPtr ;
+	volatile u8 txGetPtr ;
+	union {
+		struct {
+			volatile u8 SPI_TX_BUFFER[SPI_MAX_TX_BUFFER_SIZE] ;
+		}Mode8BIT ;
+		struct {
+			volatile u16 SPI_TX_BUFFER[SPI_MAX_TX_BUFFER_SIZE] ;
+		}Mode16BIT ;
+	}buffer ;
+}SPI_BufferTx_t ;
 
 typedef struct {
-    volatile u8 SPI_TX_BUFFER[SPI_MAX_TX_BUFFER_SIZE] ;
-    volatile u8 SPI_RX_BUFFER[SPI_MAX_RX_BUFFER_SIZE] ;
-    volatile u8 txPutPtr ;
-    volatile u8 txGetPtr ;
-    volatile u8 rxPutPtr ;
-    volatile u8 rxGetPtr ;
-}SPI_Buffer_t ;
+	SPI_Data_frame_t dataFrame ; 
+	volatile u8 rxPutPtr ;
+	volatile u8 rxGetPtr ;
+	union {
+		struct {
+			volatile u8 SPI_RX_BUFFER[SPI_MAX_RX_BUFFER_SIZE] ;
+		}Mode8BIT ;
+		struct {
+			volatile u16 SPI_RX_BUFFER[SPI_MAX_RX_BUFFER_SIZE] ;
+		}Mode16BIT ;
+	}buffer ;
+}SPI_BufferRx_t ;
 
 //
 #endif // SPI_PRV_H

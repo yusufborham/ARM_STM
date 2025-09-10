@@ -17,6 +17,7 @@ RM := rm -rf
 -include src/MCAL/USART/subdir.mk
 -include src/MCAL/SYSTICK/subdir.mk
 -include src/MCAL/SYSCFG/subdir.mk
+-include src/MCAL/SPI/subdir.mk
 -include src/MCAL/RCC/subdir.mk
 -include src/MCAL/NVIC/subdir.mk
 -include src/MCAL/GPIO/subdir.mk

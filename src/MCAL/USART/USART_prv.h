@@ -82,7 +82,7 @@ typedef enum {
 }USART_Peripheral_t;
 
 
-
+    
 typedef struct {
     volatile u32 SR ;
     volatile u32 DR ;

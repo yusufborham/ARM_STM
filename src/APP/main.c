@@ -24,6 +24,8 @@
 #include "../LIB/Delay.h"
 #include "../HAL/STP/STP_int.h"
 #include "../MCAL/USART/USART_int.h"
+#include "../MCAL/SPI/SPI_int.h"
+#include "../MCAL/SPI/SPI_cfg.h"
 
 
 int main(void) {
@@ -36,6 +38,7 @@ int main(void) {
 	MRCC_vEnableClk(RCC_AHB1, GPIOBEN);
 	MRCC_vEnableClk(RCC_APB2, SYSCFGEN);
 	MRCC_vEnableClk(RCC_APB2, USART1EN);
+	MRCC_vEnableClk(RCC_APB2, SPI1EN);
 
 	GPIOx_PinConfig_t ledPin = {
 		.Port = GPIO_A,
@@ -50,66 +53,41 @@ int main(void) {
 
 	// set GPIO A9 to be used as a TX for the USART1 
 
-	GPIOx_PinConfig_t txPin = {
+	GPIOx_PinConfig_t mosiPin = {
 		.Port = GPIO_A,
-		.Pin = GPIO_PIN_9,
+		.Pin = GPIO_PIN_7,
 		.Mode = GPIO_MODE_ALTERNATE,	
-		.AltFunc = GPIO_AF7
+		.AltFunc = GPIO_AF5
 	};
 
-	MGPIO_vPinInit(&txPin);
+	MGPIO_vPinInit(&mosiPin);
 
-		GPIOx_PinConfig_t rxPin = {
+	GPIOx_PinConfig_t sck = {
 		.Port = GPIO_A,
-		.Pin = GPIO_PIN_10,
-		.Mode = GPIO_MODE_ALTERNATE,	
-		.AltFunc = GPIO_AF7
+		.Pin = GPIO_PIN_5,
+		.Mode = GPIO_MODE_ALTERNATE,
+		.AltFunc = GPIO_AF5
 	};
 
-	MGPIO_vPinInit(&rxPin);
+	MGPIO_vPinInit(&sck);
 
-	USART_Config_t usart1_cfg = {
-		.peripheral = USART_PERIPH_1,
-		.baudRate = USART_BAUDRATE_115200,
-		.wordLength = USART_WORD_LENGTH_8BITS,
-		.stopBits = USART_STOP_BITS_1,
-		.parity = USART_PARITY_NONE,
-		.sampleRate = USART_SAMPLE_16_TIMES,
-		.sampleMethod = USART_SAMPLE_METHOD_THREE_BITS,
-		.mode = USART_MODE_TX_RX,
-		.fclk = USART_CLK_25MHZ
+	SPI_Config_t spi1_cfg = {
+		.myPeripheral = SPI_PERIPH_1,
+		.mySPIMode = MASTER,
+		.myBaudRate = CLK_DIV_8,
+		.myOperationMode = SIMPLEX_TRANSMIT,
+		.dataFrameLn = DATA_FRAME_16BIT,
+		.dataShift = MSB_FIRST,
+		.ClockPhasePol = CLK_PHA_POL_MODE_0,
+		.NSSMode = NSS_SW
 	};
 
-	MUSART_Init(&usart1_cfg);
+	MSPI_vInit(&spi1_cfg);
 
-	u8 buffer[50];  // Buffer to hold the string representation of the integer
-	const u8 buffer2[] = "OK";
-	u8 str[] = "Hello from USART1\r\n";
-	MUSART_u8WriteString(USART_PERIPH_1 , str);
 	while (1) {
-
-		if (MUSART_u8ReadStringUntilBufferPatern(USART_PERIPH_1 , buffer , 50 , buffer2) == DONE_PARSING) {
-			// Echo the received string back
-			//MUSART_u8WriteString(USART_PERIPH_1 , buffer);
-			// Check if the received string is "on" or "off"
-			// If "on", turn on the LED connected to GPIOA pin 0
-			// If "off", turn off the LED connected to GPIOA pin 0
-			// Otherwise, ignore the command
-			// Example commands: "on", "off"
-			// Note: Ensure that the commands are null-terminated strings
-			// before comparing them.
-			// Here, we assume the commands are sent as "on\r\n" and "off\r\n"
-			// so we check only the first two characters for simplicity.
-			MUSART_u8WriteString(USART_PERIPH_1 , buffer);
-			if (buffer[0] == 'o' && buffer[1] == 'n') {
-				MGPIO_vSetPinValue(GPIO_A , GPIO_PIN_0 , GPIO_PIN_HIGH);	
-			}
-			else if (buffer[0] == 'o' && buffer[1] == 'f' && buffer[2] == 'f') {
-				MGPIO_vSetPinValue(GPIO_A , GPIO_PIN_0 , GPIO_PIN_LOW);
-			}
-			else {
-				// Ignore unknown commands
-			}
+		for (u16 i = 0; i < 65000; i++) {
+			MSPI_vSendData(SPI_PERIPH_1, i);
+			DELAY_US(10);
 		}
 	}
 return 0;

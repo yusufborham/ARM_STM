@@ -6,10 +6,10 @@
 #include "../SYSTICK/SYSTICK_int.h"
 
 
-static USART_parsingIntStatus_t G_aUSART_parsingStates[USART_NUMBER] = {{0}};
-static USART_Buffer_t G_aUSART_Buffer_data[USART_NUMBER] = {{0}};
-static USART_InterruptStatus_t G_aUSART_InterruptStatus[USART_NUMBER] = {{0}};
-static USART_StringFunctionStatus_t G_aUSART_StringFunStatus[USART_NUMBER] = {{0}} ;
+static USART_parsingIntStatus_t G_aUSART_parsingStates[USART_NUMBER] = {0};
+static USART_Buffer_t G_aUSART_Buffer_data[USART_NUMBER] = {0};
+static USART_InterruptStatus_t G_aUSART_InterruptStatus[USART_NUMBER] = {0};
+static USART_StringFunctionStatus_t G_aUSART_StringFunStatus[USART_NUMBER] = {0} ;
 
 USART_Status_t USART_vHandlerRoutine(USART_Peripheral_t thisID);
 void MUSART_vBaudRateCalculations(u32 A_u32BaudRateValue ,u8 A_u8SampleRate ,u32 A_u32USART_Fclk,USART_BaudRate_cfg_t* A_sBaudRateCfg);

@@ -66,7 +66,12 @@ src/APP/main.o: ../src/APP/main.c ../src/APP/../MCAL/RCC/RCC_int.h \
  ../src/APP/../MCAL/USART/../../LIB/MATH_Fn.h \
  ../src/APP/../MCAL/USART/../../LIB/STD_TYPES.h \
  ../src/APP/../MCAL/USART/USART_prv.h \
- ../src/APP/../MCAL/USART/USART_cfg.h
+ ../src/APP/../MCAL/USART/USART_cfg.h ../src/APP/../MCAL/SPI/SPI_int.h \
+ ../src/APP/../MCAL/SPI/../../LIB/STD_TYPES.h \
+ ../src/APP/../MCAL/SPI/../../LIB/BIT_MATH.h \
+ ../src/APP/../MCAL/SPI/../../LIB/Delay.h \
+ ../src/APP/../MCAL/SPI/../../LIB/MATH_Fn.h \
+ ../src/APP/../MCAL/SPI/SPI_cfg.h
 
 ../src/APP/../MCAL/RCC/RCC_int.h:
 
@@ -221,3 +226,15 @@ src/APP/main.o: ../src/APP/main.c ../src/APP/../MCAL/RCC/RCC_int.h \
 ../src/APP/../MCAL/USART/USART_prv.h:
 
 ../src/APP/../MCAL/USART/USART_cfg.h:
+
+../src/APP/../MCAL/SPI/SPI_int.h:
+
+../src/APP/../MCAL/SPI/../../LIB/STD_TYPES.h:
+
+../src/APP/../MCAL/SPI/../../LIB/BIT_MATH.h:
+
+../src/APP/../MCAL/SPI/../../LIB/Delay.h:
+
+../src/APP/../MCAL/SPI/../../LIB/MATH_Fn.h:
+
+../src/APP/../MCAL/SPI/SPI_cfg.h:

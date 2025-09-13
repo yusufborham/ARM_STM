@@ -91,7 +91,22 @@ src/APP/main.o: ../src/APP/main.c ../src/APP/../MCAL/RCC/RCC_int.h \
  ../src/APP/../HAL/TFT/../../MCAL/SPI/SPI_int.h \
  ../src/APP/../HAL/TFT/../../MCAL/SYSCFG/SYSCFG_int.h \
  ../src/APP/../HAL/TFT/font.h ../src/APP/../HAL/TFT/TFT_prv.h \
- ../src/APP/../HAL/TFT/TFT_int.h ../src/APP/../HAL/TFT/TFT_prv.h
+ ../src/APP/../HAL/TFT/TFT_int.h ../src/APP/../HAL/TFT/TFT_prv.h \
+ ../src/APP/../HAL/Ultasonic/Ultrasonic_int.h \
+ ../src/APP/../HAL/Ultasonic/../../LIB/STD_TYPES.h \
+ ../src/APP/../HAL/Ultasonic/../../LIB/BIT_MATH.h \
+ ../src/APP/../HAL/Ultasonic/../../LIB/Delay.h \
+ ../src/APP/../HAL/Ultasonic/../../MCAL/GPIO/GPIO_int.h \
+ ../src/APP/../HAL/Ultasonic/../../MCAL/GPIO/GPIO_prv.h \
+ ../src/APP/../HAL/Ultasonic/../../MCAL/SYSTICK/SYSTICK_int.h \
+ ../src/APP/../HAL/Ultasonic/../../MCAL/SYSTICK/SYSTICK_prv.h \
+ ../src/APP/../HAL/Ultasonic/../../MCAL/EXTI/EXTI_int.h \
+ ../src/APP/../HAL/Ultasonic/../../MCAL/EXTI/EXTI_prv.h \
+ ../src/APP/../HAL/Ultasonic/../../MCAL/NVIC/NVIC_int.h \
+ ../src/APP/../HAL/Ultasonic/../../MCAL/NVIC/../../LIB/STD_TYPES.h \
+ ../src/APP/../HAL/Ultasonic/../../MCAL/NVIC/../../LIB/BIT_MATH.h \
+ ../src/APP/../HAL/Ultasonic/../../MCAL/NVIC/NVIC_prv.h \
+ ../src/APP/../HAL/Ultasonic/../../MCAL/SYSCFG/SYSCFG_int.h
 
 ../src/APP/../MCAL/RCC/RCC_int.h:
 
@@ -304,3 +319,33 @@ src/APP/main.o: ../src/APP/main.c ../src/APP/../MCAL/RCC/RCC_int.h \
 ../src/APP/../HAL/TFT/TFT_int.h:
 
 ../src/APP/../HAL/TFT/TFT_prv.h:
+
+../src/APP/../HAL/Ultasonic/Ultrasonic_int.h:
+
+../src/APP/../HAL/Ultasonic/../../LIB/STD_TYPES.h:
+
+../src/APP/../HAL/Ultasonic/../../LIB/BIT_MATH.h:
+
+../src/APP/../HAL/Ultasonic/../../LIB/Delay.h:
+
+../src/APP/../HAL/Ultasonic/../../MCAL/GPIO/GPIO_int.h:
+
+../src/APP/../HAL/Ultasonic/../../MCAL/GPIO/GPIO_prv.h:
+
+../src/APP/../HAL/Ultasonic/../../MCAL/SYSTICK/SYSTICK_int.h:
+
+../src/APP/../HAL/Ultasonic/../../MCAL/SYSTICK/SYSTICK_prv.h:
+
+../src/APP/../HAL/Ultasonic/../../MCAL/EXTI/EXTI_int.h:
+
+../src/APP/../HAL/Ultasonic/../../MCAL/EXTI/EXTI_prv.h:
+
+../src/APP/../HAL/Ultasonic/../../MCAL/NVIC/NVIC_int.h:
+
+../src/APP/../HAL/Ultasonic/../../MCAL/NVIC/../../LIB/STD_TYPES.h:
+
+../src/APP/../HAL/Ultasonic/../../MCAL/NVIC/../../LIB/BIT_MATH.h:
+
+../src/APP/../HAL/Ultasonic/../../MCAL/NVIC/NVIC_prv.h:
+
+../src/APP/../HAL/Ultasonic/../../MCAL/SYSCFG/SYSCFG_int.h:

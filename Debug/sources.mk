@@ -34,6 +34,7 @@ src/HAL/NEC \
 src/HAL/STP \
 src/HAL/SevenSegment \
 src/HAL/TFT \
+src/HAL/Ultasonic \
 src/LIB \
 src/MCAL/EXTI \
 src/MCAL/GPIO \

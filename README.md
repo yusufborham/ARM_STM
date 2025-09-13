@@ -1,12 +1,18 @@
-# MCAL Interface Guide for STM32F4
+# API Documentation
+
+## MCAL Interface Guide for STM32F4
 
 This guide provides documentation for the Microcontroller Abstraction Layer (MCAL) drivers, including RCC, GPIO, SysTick, EXTI, NVIC, and SYSCFG.
 
-## RCC - Functions
+### RCC - Functions
 
 The Reset and Clock Control (RCC) driver is responsible for configuring system clocks, enabling/disabling peripheral clocks, and setting bus prescalers.
 
-### `MRCC_vInit`
+#### `MRCC_vInit`
+
+```c
+void MRCC_vInit(void);
+```
 
 Initializes the RCC with the default clock settings configured in `RCC_cfg.h`. This typically involves configuring HSI/HSE, the PLL, and selecting the system clock source.
 
@@ -16,16 +22,19 @@ void MRCC_vInit(void);
 
 **Configuration in `RCC_cfg.h`:**
 
-  * To choose the system clock source, modify the `RCC_SYS_CLK` definition:
+* To choose the system clock source, modify the `RCC_SYS_CLK` definition:
+
     ```c
     #define RCC_SYS_CLK   HSE_CLK // Options: HSE_CLK, HSI_CLK, PLL_CLK
     ```
-  * To specify the external clock source type (crystal/oscillator or external clock):
+
+* To specify the external clock source type (crystal/oscillator or external clock):
+
     ```c
     #define HSE_BYPASS    MECHANICAL_CLK // Options: RC_CLK, MECHANICAL_CLK
     ```
 
-### `MRCC_vEnableClk`
+#### `MRCC_vEnableClk`
 
 Enables the clock for a specific peripheral.
 
@@ -33,14 +42,14 @@ Enables the clock for a specific peripheral.
 void MRCC_vEnableClk(u8 A_u8BusID, u8 A_u8PeripheralID);
 ```
 
-  * **`A_u8BusID`**: The bus the peripheral is connected to.
-      * `RCC_AHB1`
-      * `RCC_AHB2`
-      * `RCC_APB1`
-      * `RCC_APB2`
-  * **`A_u8PeripheralID`**: The ID of the peripheral to enable (defined in `RCC_prv.h`). Examples include: `GPIOAEN`, `GPIOBEN`, `TIM2EN`, `SPI1EN`, `USART1EN`, `SYSCFGEN`, etc.
+* **`A_u8BusID`**: The bus the peripheral is connected to.
+  * `RCC_AHB1`
+  * `RCC_AHB2`
+  * `RCC_APB1`
+  * `RCC_APB2`
+* **`A_u8PeripheralID`**: The ID of the peripheral to enable (defined in `RCC_prv.h`). Examples include: `GPIOAEN`, `GPIOBEN`, `TIM2EN`, `SPI1EN`, `USART1EN`, `SYSCFGEN`, etc.
 
-### `MRCC_vDisableClk`
+#### `MRCC_vDisableClk`
 
 Disables the clock for a specific peripheral to save power.
 
@@ -48,14 +57,14 @@ Disables the clock for a specific peripheral to save power.
 void MRCC_vDisableClk(u8 A_u8BusID, u8 A_u8PeripheralID);
 ```
 
-  * **`A_u8BusID`**: The bus the peripheral is connected to.
-      * `RCC_AHB1`
-      * `RCC_AHB2`
-      * `RCC_APB1`
-      * `RCC_APB2`
-  * **`A_u8PeripheralID`**: The ID of the peripheral to disable.
+* **`A_u8BusID`**: The bus the peripheral is connected to.
+  * `RCC_AHB1`
+  * `RCC_AHB2`
+  * `RCC_APB1`
+  * `RCC_APB2`
+* **`A_u8PeripheralID`**: The ID of the peripheral to disable.
 
-### `MRCC_vSetAPB1Prescaler`
+#### `MRCC_vSetAPB1Prescaler`
 
 Configures the clock prescaler for the APB1 bus.
 
@@ -63,14 +72,14 @@ Configures the clock prescaler for the APB1 bus.
 void MRCC_vSetAPB1Prescaler(u8 A_u8Prescaler);
 ```
 
-  * **`A_u8Prescaler`**: The division factor for the HCLK.
-      * `APB1_PRESCALER_DIVIDE_1`
-      * `APB1_PRESCALER_DIVIDE_2`
-      * `APB1_PRESCALER_DIVIDE_4`
-      * `APB1_PRESCALER_DIVIDE_8`
-      * `APB1_PRESCALER_DIVIDE_16`
+* **`A_u8Prescaler`**: The division factor for the HCLK.
+  * `APB1_PRESCALER_DIVIDE_1`
+  * `APB1_PRESCALER_DIVIDE_2`
+  * `APB1_PRESCALER_DIVIDE_4`
+  * `APB1_PRESCALER_DIVIDE_8`
+  * `APB1_PRESCALER_DIVIDE_16`
 
-### `MRCC_vSetAPB2Prescaler`
+#### `MRCC_vSetAPB2Prescaler`
 
 Configures the clock prescaler for the APB2 bus.
 
@@ -78,14 +87,14 @@ Configures the clock prescaler for the APB2 bus.
 void MRCC_vSetAPB2Prescaler(u8 A_u8Prescaler);
 ```
 
-  * **`A_u8Prescaler`**: The division factor for the HCLK.
-      * `APB2_PRESCALER_DIVIDE_1`
-      * `APB2_PRESCALER_DIVIDE_2`
-      * `APB2_PRESCALER_DIVIDE_4`
-      * `APB2_PRESCALER_DIVIDE_8`
-      * `APB2_PRESCALER_DIVIDE_16`
+* **`A_u8Prescaler`**: The division factor for the HCLK.
+  * `APB2_PRESCALER_DIVIDE_1`
+  * `APB2_PRESCALER_DIVIDE_2`
+  * `APB2_PRESCALER_DIVIDE_4`
+  * `APB2_PRESCALER_DIVIDE_8`
+  * `APB2_PRESCALER_DIVIDE_16`
 
-### `MRCC_vSetAHBPrescaler`
+#### `MRCC_vSetAHBPrescaler`
 
 Configures the clock prescaler for the AHB bus.
 
@@ -93,18 +102,18 @@ Configures the clock prescaler for the AHB bus.
 void MRCC_vSetAHBPrescaler(u8 A_u8Prescaler);
 ```
 
-  * **`A_u8Prescaler`**: The division factor for the SYSCLK.
-      * `AHB_PRESCALER_DIVIDE_1`
-      * `AHB_PRESCALER_DIVIDE_2`
-      * `AHB_PRESCALER_DIVIDE_4`
-      * `AHB_PRESCALER_DIVIDE_8`
-      * `AHB_PRESCALER_DIVIDE_16`
-      * `AHB_PRESCALER_DIVIDE_64`
-      * `AHB_PRESCALER_DIVIDE_128`
-      * `AHB_PRESCALER_DIVIDE_256`
-      * `AHB_PRESCALER_DIVIDE_512`
+* **`A_u8Prescaler`**: The division factor for the SYSCLK.
+  * `AHB_PRESCALER_DIVIDE_1`
+  * `AHB_PRESCALER_DIVIDE_2`
+  * `AHB_PRESCALER_DIVIDE_4`
+  * `AHB_PRESCALER_DIVIDE_8`
+  * `AHB_PRESCALER_DIVIDE_16`
+  * `AHB_PRESCALER_DIVIDE_64`
+  * `AHB_PRESCALER_DIVIDE_128`
+  * `AHB_PRESCALER_DIVIDE_256`
+  * `AHB_PRESCALER_DIVIDE_512`
 
-### `MRCC_vOutputClockOnHardwarePin`
+#### `MRCC_vOutputClockOnHardwarePin`
 
 Configures the MCO1 pin to output a selected system clock for debugging or external use.
 
@@ -112,24 +121,35 @@ Configures the MCO1 pin to output a selected system clock for debugging or exter
 void MRCC_vOutputClockOnHardwarePin(u8 A_u8MCO1_PRESCALER, u8 A_u8MCO1_SOURCE);
 ```
 
-  * **`A_u8MCO1_PRESCALER`**: The division factor for the selected clock source.
-      * `MCO1_PRESCALER_DIVIDE_1`
-      * `MCO1_PRESCALER_DIVIDE_2`
-      * `MCO1_PRESCALER_DIVIDE_4`
-      * `MCO1_PRESCALER_DIVIDE_8`
-      * `MCO1_PRESCALER_DIVIDE_16`
-  * **`A_u8MCO1_SOURCE`**: The clock source to output.
-      * `MCO1_SOURCE_HSI`
-      * `MCO1_SOURCE_LSE`
-      * `MCO1_SOURCE_HSE`
-      * `MCO1_SOURCE_PLL`
+* **`A_u8MCO1_PRESCALER`**: The division factor for the selected clock source.
+  * `MCO1_PRESCALER_DIVIDE_1`
+  * `MCO1_PRESCALER_DIVIDE_2`
+  * `MCO1_PRESCALER_DIVIDE_4`
+  * `MCO1_PRESCALER_DIVIDE_8`
+  * `MCO1_PRESCALER_DIVIDE_16`
+* **`A_u8MCO1_SOURCE`**: The clock source to output.
+  * `MCO1_SOURCE_HSI`
+  * `MCO1_SOURCE_LSE`
+  * `MCO1_SOURCE_HSE`
+  * `MCO1_SOURCE_PLL`
 
-## GPIO - Functions
+### GPIO - Functions
 
 The General Purpose Input/Output (GPIO) driver provides an abstraction layer for configuring and controlling GPIO pins.
 
-### `MGPIO_vPinInit`
+The following functions provide direct control over pin configuration aspects, which are also handled by `MGPIO_vPinInit`.
 
+* **`MGPIO_vSetPinMode(u8 A_u8PortID, u8 A_u8PinID, u8 A_u8Mode)`**: Sets the mode (Input, Output, etc.).
+* **`MGPIO_vSetPinOutputType(u8 A_u8PortID, u8 A_u8PinID, u8 A_u8OutputType)`**: Sets the output type (Push-pull, Open-drain).
+* **`MGPIO_vSetPinSpeed(u8 A_u8PortID, u8 A_u8PinID, u8 A_u8Speed)`**: Sets the pin speed.
+* **`MGPIO_vSetPinPullUpDown(u8 A_u8PortID, u8 A_u8PinID, u8 A_u8PullUpDown)`**: Configures pull-up/pull-down resistors.
+* **`MGPIO_vSetPinAlternateFunction(u8 A_u8PortID, u8 A_u8PinID, u8 A_u8AlternateFunction)`**: Sets the alternate function number for a pin.
+
+The following functions provide control over an entire port or a byte within a port.
+
+* **`MGPIO_vSetAllPort(u8 A_u8PortID, u16 A_u16Value)`**: Sets the output value of all 16 pins of a port at once.
+* **`MGPIO_vSetLeastByteInPort(u8 A_u8PortID, u8 A_u8Value)`**: Sets the value of the lower 8 pins (0-7) of a port.
+* **`MGPIO_vSetMostByteInPort(u8 A_u8PortID, u8 A_u8Value)`**: Sets the value of the higher 8 pins (8-15) of a port.
 Initializes a single GPIO pin with a comprehensive set of configurations using a structure.
 
 ```c
@@ -148,16 +168,16 @@ GPIOx_PinConfig_t pinLed = {
 MGPIO_vPinInit(&pinLed);
 ```
 
-  * **`A_xPinCfg`**: A pointer to a `GPIOx_PinConfig_t` structure with the following fields:
-      * **`.Port`**: `GPIO_A`, `GPIO_B`, `GPIO_C`, `GPIO_D`
-      * **`.Pin`**: `GPIO_PIN_0` through `GPIO_PIN_15`
-      * **`.Mode`**: `GPIO_MODE_INPUT`, `GPIO_MODE_OUTPUT`, `GPIO_MODE_ALTERNATE`, `GPIO_MODE_ANALOG`
-      * **`.OutputType`**: `GPIO_OTYPE_PP` (Push-pull), `GPIO_OTYPE_OD` (Open-drain)
-      * **`.PullType`**: `GPIO_PUPD_NONE`, `GPIO_PUPD_PULL_UP`, `GPIO_PUPD_PULL_DOWN`
-      * **`.Speed`**: `GPIO_SPEED_LOW`, `GPIO_SPEED_MEDIUM`, `GPIO_SPEED_HIGH`, `GPIO_SPEED_VERY_HIGH`
-      * **`.AltFunc`**: `GPIO_AF0` through `GPIO_AF15` (used when `.Mode` is `GPIO_MODE_ALTERNATE`)
+* **`A_xPinCfg`**: A pointer to a `GPIOx_PinConfig_t` structure with the following fields:
+  * **`.Port`**: `GPIO_A`, `GPIO_B`, `GPIO_C`, `GPIO_D`
+  * **`.Pin`**: `GPIO_PIN_0` through `GPIO_PIN_15`
+  * **`.Mode`**: `GPIO_MODE_INPUT`, `GPIO_MODE_OUTPUT`, `GPIO_MODE_ALTERNATE`, `GPIO_MODE_ANALOG`
+  * **`.OutputType`**: `GPIO_OTYPE_PP` (Push-pull), `GPIO_OTYPE_OD` (Open-drain)
+  * **`.PullType`**: `GPIO_PUPD_NONE`, `GPIO_PUPD_PULL_UP`, `GPIO_PUPD_PULL_DOWN`
+  * **`.Speed`**: `GPIO_SPEED_LOW`, `GPIO_SPEED_MEDIUM`, `GPIO_SPEED_HIGH`, `GPIO_SPEED_VERY_HIGH`
+  * **`.AltFunc`**: `GPIO_AF0` through `GPIO_AF15` (used when `.Mode` is `GPIO_MODE_ALTERNATE`)
 
-### `MGPIO_vSetPinValue`
+#### `MGPIO_vSetPinValue`
 
 Sets the logical state of an output pin to high or low.
 
@@ -165,13 +185,13 @@ Sets the logical state of an output pin to high or low.
 void MGPIO_vSetPinValue(u8 A_u8PortID, u8 A_u8PinID, u8 A_u8Value);
 ```
 
-  * **`A_u8PortID`**: The port ID (e.g., `GPIO_A`).
-  * **`A_u8PinID`**: The pin number (e.g., `GPIO_PIN_5`).
-  * **`A_u8Value`**: The desired logical level.
-      * `GPIO_PIN_HIGH`
-      * `GPIO_PIN_LOW`
+* **`A_u8PortID`**: The port ID (e.g., `GPIO_A`).
+* **`A_u8PinID`**: The pin number (e.g., `GPIO_PIN_5`).
+* **`A_u8Value`**: The desired logical level.
+  * `GPIO_PIN_HIGH`
+  * `GPIO_PIN_LOW`
 
-### `MGPIO_u8GetPinValue`
+##### `MGPIO_u8GetPinValue`
 
 Reads the logical state of an input pin.
 
@@ -179,11 +199,11 @@ Reads the logical state of an input pin.
 u8 MGPIO_u8GetPinValue(u8 A_u8PortID, u8 A_u8PinID);
 ```
 
-  * **`A_u8PortID`**: The port ID (e.g., `GPIO_A`).
-  * **`A_u8PinID`**: The pin number (e.g., `GPIO_PIN_0`).
-  * **Returns**: `GPIO_PIN_HIGH` (1) or `GPIO_PIN_LOW` (0).
+* **`A_u8PortID`**: The port ID (e.g., `GPIO_A`).
+* **`A_u8PinID`**: The pin number (e.g., `GPIO_PIN_0`).
+* **Returns**: `GPIO_PIN_HIGH` (1) or `GPIO_PIN_LOW` (0).
 
-### `MGPIO_vTogglePinValue`
+#### `MGPIO_vTogglePinValue`
 
 Toggles the logical state of an output pin (HIGH to LOW or LOW to HIGH).
 
@@ -191,30 +211,30 @@ Toggles the logical state of an output pin (HIGH to LOW or LOW to HIGH).
 void MGPIO_vTogglePinValue(u8 A_u8PortID, u8 A_u8PinID);
 ```
 
-  * **`A_u8PortID`**: The port ID (e.g., `GPIO_A`).
-  * **`A_u8PinID`**: The pin number (e.g., `GPIO_PIN_5`).
+* **`A_u8PortID`**: The port ID (e.g., `GPIO_A`).
+* **`A_u8PinID`**: The pin number (e.g., `GPIO_PIN_5`).
 
-### Other GPIO Functions
+#### Other GPIO Functions
 
 The following functions provide direct control over pin configuration aspects, which are also handled by `MGPIO_vPinInit`.
 
-  * **`MGPIO_vSetPinMode(u8 A_u8PortID, u8 A_u8PinID, u8 A_u8Mode)`**: Sets the mode (Input, Output, etc.).
-  * **`MGPIO_vSetPinOutputType(u8 A_u8PortID, u8 A_u8PinID, u8 A_u8OutputType)`**: Sets the output type (Push-pull, Open-drain).
-  * **`MGPIO_vSetPinSpeed(u8 A_u8PortID, u8 A_u8PinID, u8 A_u8Speed)`**: Sets the pin speed.
-  * **`MGPIO_vSetPinPullUpDown(u8 A_u8PortID, u8 A_u8PinID, u8 A_u8PullUpDown)`**: Configures pull-up/pull-down resistors.
-  * **`MGPIO_vSetPinAlternateFunction(u8 A_u8PortID, u8 A_u8PinID, u8 A_u8AlternateFunction)`**: Sets the alternate function number for a pin.
+* **`MGPIO_vSetPinMode(u8 A_u8PortID, u8 A_u8PinID, u8 A_u8Mode)`**: Sets the mode (Input, Output, etc.).
+* **`MGPIO_vSetPinOutputType(u8 A_u8PortID, u8 A_u8PinID, u8 A_u8OutputType)`**: Sets the output type (Push-pull, Open-drain).
+* **`MGPIO_vSetPinSpeed(u8 A_u8PortID, u8 A_u8PinID, u8 A_u8Speed)`**: Sets the pin speed.
+* **`MGPIO_vSetPinPullUpDown(u8 A_u8PortID, u8 A_u8PinID, u8 A_u8PullUpDown)`**: Configures pull-up/pull-down resistors.
+* **`MGPIO_vSetPinAlternateFunction(u8 A_u8PortID, u8 A_u8PinID, u8 A_u8AlternateFunction)`**: Sets the alternate function number for a pin.
 
 The following functions provide control over an entire port or a byte within a port.
 
-  * **`MGPIO_vSetAllPort(u8 A_u8PortID, u16 A_u16Value)`**: Sets the output value of all 16 pins of a port at once.
-  * **`MGPIO_vSetLeastByteInPort(u8 A_u8PortID, u8 A_u8Value)`**: Sets the value of the lower 8 pins (0-7) of a port.
-  * **`MGPIO_vSetMostByteInPort(u8 A_u8PortID, u8 A_u8Value)`**: Sets the value of the higher 8 pins (8-15) of a port.
+* **`MGPIO_vSetAllPort(u8 A_u8PortID, u16 A_u16Value)`**: Sets the output value of all 16 pins of a port at once.
+* **`MGPIO_vSetLeastByteInPort(u8 A_u8PortID, u8 A_u8Value)`**: Sets the value of the lower 8 pins (0-7) of a port.
+* **`MGPIO_vSetMostByteInPort(u8 A_u8PortID, u8 A_u8Value)`**: Sets the value of the higher 8 pins (8-15) of a port.
 
-## SYSTICK - Functions
+### SYSTICK - Functions
 
 The SysTick driver provides a simple 24-bit down-counting timer for creating time bases, delays, and periodic interrupts.
 
-### `MSYSTICK_vChooseClockSource`
+#### `MSYSTICK_vChooseClockSource`
 
 Selects the clock source for the SysTick timer.
 
@@ -222,11 +242,11 @@ Selects the clock source for the SysTick timer.
 void MSYSTICK_vChooseClockSource(u8 A_u8ClockSource);
 ```
 
-  * **`A_u8ClockSource`**: The desired clock source.
-      * `SYSTICK_CLK_SOURCE_AHB_DIV_8`
-      * `SYSTICK_CLK_SOURCE_AHB_DIV_1`
+* **`A_u8ClockSource`**: The desired clock source.
+  * `SYSTICK_CLK_SOURCE_AHB_DIV_8`
+  * `SYSTICK_CLK_SOURCE_AHB_DIV_1`
 
-### `MSYSTICK_vStartTimer`
+#### `MSYSTICK_vStartTimer`
 
 Starts the SysTick timer with a specific reload value.
 
@@ -234,9 +254,9 @@ Starts the SysTick timer with a specific reload value.
 void MSYSTICK_vStartTimer(u32 A_u32ReloadValue);
 ```
 
-  * **`A_u32ReloadValue`**: The value to load into the timer (max `0x00FFFFFF`). The timer will count down from this value.
+* **`A_u32ReloadValue`**: The value to load into the timer (max `0x00FFFFFF`). The timer will count down from this value.
 
-### `MSYSTICK_vSetDelayMS`
+#### `MSYSTICK_vSetDelayMS`
 
 Creates a blocking delay for a specified duration in milliseconds.
 
@@ -244,9 +264,9 @@ Creates a blocking delay for a specified duration in milliseconds.
 void MSYSTICK_vSetDelayMS(f32 A_f32Delay);
 ```
 
-  * **`A_f32Delay`**: The delay duration in milliseconds.
+* **`A_f32Delay`**: The delay duration in milliseconds.
 
-### `MSYSTICK_vSetIntervalSingle`
+#### `MSYSTICK_vSetIntervalSingle`
 
 Sets the SysTick timer to trigger an interrupt once after a specified interval.
 
@@ -254,10 +274,10 @@ Sets the SysTick timer to trigger an interrupt once after a specified interval.
 void MSYSTICK_vSetIntervalSingle(u32 A_u32Interval, void (*A_pvCallBack)(void));
 ```
 
-  * **`A_u32Interval`**: The interval duration in milliseconds.
-  * **`A_pvCallBack`**: A pointer to the callback function to execute when the interval elapses.
+* **`A_u32Interval`**: The interval duration in milliseconds.
+* **`A_pvCallBack`**: A pointer to the callback function to execute when the interval elapses.
 
-### `MSYSTICK_vSetIntervalMulti`
+#### `MSYSTICK_vSetIntervalMulti`
 
 Sets the SysTick timer to trigger interrupts periodically.
 
@@ -265,10 +285,10 @@ Sets the SysTick timer to trigger interrupts periodically.
 void MSYSTICK_vSetIntervalMulti(u32 A_u32Interval, void (*A_pvCallBack)(void));
 ```
 
-  * **`A_u32Interval`**: The interval duration in milliseconds.
-  * **`A_pvCallBack`**: A pointer to the callback function to execute at each interval.
+* **`A_u32Interval`**: The interval duration in milliseconds.
+* **`A_pvCallBack`**: A pointer to the callback function to execute at each interval.
 
-### `MSYSTICK_vSetIntervalMultiMicroseconds`
+#### `MSYSTICK_vSetIntervalMultiMicroseconds`
 
 Sets the SysTick timer to trigger interrupts periodically with microsecond precision.
 
@@ -276,39 +296,41 @@ Sets the SysTick timer to trigger interrupts periodically with microsecond preci
 void MSYSTICK_vSetIntervalMultiMicroseconds(u32 A_u32Interval, void (*A_pvCallBack)(void));
 ```
 
-  * **`A_u32Interval`**: The interval duration in microseconds.
-  * **`A_pvCallBack`**: A pointer to the callback function to execute at each interval.
+* **`A_u32Interval`**: The interval duration in microseconds.
+* **`A_pvCallBack`**: A pointer to the callback function to execute at each interval.
 
-### `MSYSTICK_millis`
+#### `MSYSTICK_millis`
+
 Returns the number of milliseconds that have elapsed since the SysTick timer was enabled.
 
 ```c  
 u32 MSYSTICK_millis();
 
 ```
-### `MSYSTICK_vEnableBackgroundMillis`
+
+#### `MSYSTICK_vEnableBackgroundMillis`
 
 ```c
 void MSYSTICK_vEnableBackgroundMillis();
 ```
+
 Enables a background millisecond counter using SysTick. This allows `MSYSTICK_millis()` to return the elapsed time since enabled.
 
+#### Other SysTick Functions
 
-### Other SysTick Functions
+* **`MSYSTICK_vEnableTimer()`**: Enables the SysTick timer counter.
+* **`MSYSTICK_vDisableTimer()`**: Stops/disables the SysTick timer.
+* **`MSYSTICK_vEnableOvfInterrupt()`**: Enables the count-to-zero interrupt.
+* **`MSYSTICK_vDisableOvfInterrupt()`**: Disables the count-to-zero interrupt.
+* **`u8 MSYSTICK_u8GetFlag()`**: Returns 1 if the timer has counted to 0 since the last read.
+* **`u32 MSYSTICK_u32GetElapsedTimeTicks()`**: Returns the number of ticks that have elapsed since the last reload.
+* **`u32 MSYSTICK_u32GetRemainingTimeTicks()`**: Returns the number of ticks remaining before the counter reaches zero.
 
-  * **`MSYSTICK_vEnableTimer()`**: Enables the SysTick timer counter.
-  * **`MSYSTICK_vDisableTimer()`**: Stops/disables the SysTick timer.
-  * **`MSYSTICK_vEnableOvfInterrupt()`**: Enables the count-to-zero interrupt.
-  * **`MSYSTICK_vDisableOvfInterrupt()`**: Disables the count-to-zero interrupt.
-  * **`u8 MSYSTICK_u8GetFlag()`**: Returns 1 if the timer has counted to 0 since the last read.
-  * **`u32 MSYSTICK_u32GetElapsedTimeTicks()`**: Returns the number of ticks that have elapsed since the last reload.
-  * **`u32 MSYSTICK_u32GetRemainingTimeTicks()`**: Returns the number of ticks remaining before the counter reaches zero.
-
-## EXTI - Functions
+### EXTI - Functions
 
 The External Interrupt (EXTI) driver configures interrupts triggered by GPIO pin state changes.
 
-### `MEXTI_vEnableExternalInterruptLine`
+#### `MEXTI_vEnableExternalInterruptLine`
 
 Enables the interrupt for a specific EXTI line (0-15).
 
@@ -316,9 +338,9 @@ Enables the interrupt for a specific EXTI line (0-15).
 void MEXTI_vEnableExternalInterruptLine(u8 A_u8PinID);
 ```
 
-  * **`A_u8PinID`**: The pin number corresponding to the EXTI line (e.g., `GPIO_PIN_0` for EXTI0).
+* **`A_u8PinID`**: The pin number corresponding to the EXTI line (e.g., `GPIO_PIN_0` for EXTI0).
 
-### `MEXTI_vDisableExternalInterruptLine`
+#### `MEXTI_vDisableExternalInterruptLine`
 
 Disables the interrupt for a specific EXTI line.
 
@@ -326,9 +348,9 @@ Disables the interrupt for a specific EXTI line.
 void MEXTI_vDisableExternalInterruptLine(u8 A_u8PinID);
 ```
 
-  * **`A_u8PinID`**: The pin number corresponding to the EXTI line.
+* **`A_u8PinID`**: The pin number corresponding to the EXTI line.
 
-### `MEXTI_vSetTriggerCondition`
+#### `MEXTI_vSetTriggerCondition`
 
 Configures the trigger condition (e.g., rising or falling edge) for an EXTI line.
 
@@ -336,13 +358,13 @@ Configures the trigger condition (e.g., rising or falling edge) for an EXTI line
 void MEXTI_vSetTriggerCondition(u8 A_u8PinID, u8 A_u8TriggerCondition);
 ```
 
-  * **`A_u8PinID`**: The pin number corresponding to the EXTI line.
-  * **`A_u8TriggerCondition`**: The event that will trigger the interrupt.
-      * `RISING_EDGE_INTERRUPT_TRIGGER`
-      * `FALLING_EDGE_INTERRUPT_TRIGGER`
-      * `BOTH_EDGE_INTERRUPT_TRIGGER`
+* **`A_u8PinID`**: The pin number corresponding to the EXTI line.
+* **`A_u8TriggerCondition`**: The event that will trigger the interrupt.
+  * `RISING_EDGE_INTERRUPT_TRIGGER`
+  * `FALLING_EDGE_INTERRUPT_TRIGGER`
+  * `BOTH_EDGE_INTERRUPT_TRIGGER`
 
-### `MEXTI_vSetCallBackFunction`
+#### `MEXTI_vSetCallBackFunction`
 
 Registers a callback function to be executed when an EXTI interrupt occurs.
 
@@ -350,19 +372,19 @@ Registers a callback function to be executed when an EXTI interrupt occurs.
 void MEXTI_vSetCallBackFunction(u8 A_u8PinID, void (*A_fpHandler)(void));
 ```
 
-  * **`A_u8PinID`**: The pin number corresponding to the EXTI line.
-  * **`A_fpHandler`**: A pointer to the user-defined handler function.
+* **`A_u8PinID`**: The pin number corresponding to the EXTI line.
+* **`A_fpHandler`**: A pointer to the user-defined handler function.
 
-### Other EXTI Functions
+#### Other EXTI Functions
 
-  * **`u8 MEXTI_u8GetPendingFlag(u8 A_u8PinID)`**: Checks if an interrupt is pending on a line.
-  * **`void MEXTI_vClearPendingFlag(u8 A_u8PinID)`**: Clears the pending interrupt flag for a line.
+* **`u8 MEXTI_u8GetPendingFlag(u8 A_u8PinID)`**: Checks if an interrupt is pending on a line.
+* **`void MEXTI_vClearPendingFlag(u8 A_u8PinID)`**: Clears the pending interrupt flag for a line.
 
-## SYSCFG - Functions
+### SYSCFG - Functions
 
 The System Configuration (SYSCFG) controller is primarily used to map a GPIO port to an EXTI line.
 
-### `MSYSCFG_vSetExternalInterruptLine`
+#### `MSYSCFG_vSetExternalInterruptLine`
 
 Maps a GPIO port to a specific EXTI line. For example, you can select whether EXTI line 0 is connected to PA0, PB0, or PC0.
 
@@ -370,14 +392,14 @@ Maps a GPIO port to a specific EXTI line. For example, you can select whether EX
 void MSYSCFG_vSetExternalInterruptLine(u8 A_u8PortID, u8 A_u8PinID);
 ```
 
-  * **`A_u8PortID`**: The port to connect to the EXTI line (e.g., `GPIO_A`, `GPIO_B`).
-  * **`A_u8PinID`**: The pin number (0-15) which determines the EXTI line.
+* **`A_u8PortID`**: The port to connect to the EXTI line (e.g., `GPIO_A`, `GPIO_B`).
+* **`A_u8PinID`**: The pin number (0-15) which determines the EXTI line.
 
-## NVIC - Functions
+### NVIC - Functions
 
 The Nested Vectored Interrupt Controller (NVIC) manages all hardware interrupts, including enabling/disabling them and setting their priorities.
 
-### `MNVIC_vEnableInterrupt`
+#### `MNVIC_vEnableInterrupt`
 
 Enables a specific peripheral or external interrupt.
 
@@ -385,9 +407,9 @@ Enables a specific peripheral or external interrupt.
 void MNVIC_vEnableInterrupt(u8 A_u8InterruptID);
 ```
 
-  * **`A_u8InterruptID`**: The ID of the interrupt to enable. See the `Interrupt_ID_t` enum for all options (e.g., `EXTI0_IRQn`, `TIM2_IRQn`, `USART1_IRQn`).
+* **`A_u8InterruptID`**: The ID of the interrupt to enable. See the `Interrupt_ID_t` enum for all options (e.g., `EXTI0_IRQn`, `TIM2_IRQn`, `USART1_IRQn`).
 
-### `MNVIC_vDisableInterrupt`
+#### `MNVIC_vDisableInterrupt`
 
 Disables a specific interrupt.
 
@@ -395,9 +417,9 @@ Disables a specific interrupt.
 void MNVIC_vDisableInterrupt(u8 A_u8InterruptID);
 ```
 
-  * **`A_u8InterruptID`**: The ID of the interrupt to disable (from `Interrupt_ID_t`).
+* **`A_u8InterruptID`**: The ID of the interrupt to disable (from `Interrupt_ID_t`).
 
-### `MNVIC_vConfigGroupPriority`
+#### `MNVIC_vConfigGroupPriority`
 
 Configures the global priority grouping scheme, which defines how the 4 priority bits are split between group priority (preemption) and sub-priority.
 
@@ -405,14 +427,14 @@ Configures the global priority grouping scheme, which defines how the 4 priority
 void MNVIC_vConfigGroupPriority(NVIC_PriorityGroup_t A_u8GroupPriority);
 ```
 
-  * **`A_u8GroupPriority`**: The desired grouping scheme.
-      * `NVIC_PriorityGroup16_SubGroup0` (4 bits for group, 0 for sub)
-      * `NVIC_PriorityGroup8_SubGroup2` (3 bits for group, 1 for sub)
-      * `NVIC_PriorityGroup4_SubGroup4` (2 bits for group, 2 for sub)
-      * `NVIC_PriorityGroup2_SubGroup8` (1 bit for group, 3 for sub)
-      * `NVIC_PriorityGroup0_SubGroup16` (0 bits for group, 4 for sub)
+* **`A_u8GroupPriority`**: The desired grouping scheme.
+  * `NVIC_PriorityGroup16_SubGroup0` (4 bits for group, 0 for sub)
+  * `NVIC_PriorityGroup8_SubGroup2` (3 bits for group, 1 for sub)
+  * `NVIC_PriorityGroup4_SubGroup4` (2 bits for group, 2 for sub)
+  * `NVIC_PriorityGroup2_SubGroup8` (1 bit for group, 3 for sub)
+  * `NVIC_PriorityGroup0_SubGroup16` (0 bits for group, 4 for sub)
 
-### `MNVIC_vSetPriority`
+#### `MNVIC_vSetPriority`
 
 Sets the group and sub-priority for a specific interrupt.
 
@@ -420,26 +442,25 @@ Sets the group and sub-priority for a specific interrupt.
 void MNVIC_vSetPriority(u8 A_u8InterruptID, u8 A_u8GroupPriority, u8 A_u8SubGroupPriority);
 ```
 
-  * **`A_u8InterruptID`**: The ID of the interrupt.
-  * **`A_u8GroupPriority`**: The group priority value (determines preemption).
-  * **`A_u8SubGroupPriority`**: The sub-priority value (determines order among same-priority interrupts).
+* **`A_u8InterruptID`**: The ID of the interrupt.
+* **`A_u8GroupPriority`**: The group priority value (determines preemption).
+* **`A_u8SubGroupPriority`**: The sub-priority value (determines order among same-priority interrupts).
 
-### Other NVIC Functions
+#### Other NVIC Functions
 
-  * **`void MNVIC_vSetPendingFlag(u8 A_u8InterruptID)`**: Manually sets the pending flag for an interrupt (for software-triggered interrupts).
-  * **`void MNVIC_vClearPendingFlag(u8 A_u8InterruptID)`**: Clears the pending flag for an interrupt.
-  * **`u8 MNVIC_u8GetActiveFlag(u8 A_u8InterruptID)`**: Returns 1 if the specified interrupt is currently being serviced.
+* **`void MNVIC_vSetPendingFlag(u8 A_u8InterruptID)`**: Manually sets the pending flag for an interrupt (for software-triggered interrupts).
+* **`void MNVIC_vClearPendingFlag(u8 A_u8InterruptID)`**: Clears the pending flag for an interrupt.
+* **`u8 MNVIC_u8GetActiveFlag(u8 A_u8InterruptID)`**: Returns 1 if the specified interrupt is currently being serviced.
 
- 
 ---
 
-## USART - Functions
+### USART - Functions
 
 The Universal Synchronous/Asynchronous Receiver/Transmitter (USART) driver provides APIs to configure and use USART peripherals for serial communication. It supports multiple baud rates, word lengths, stop bits, parity modes, and operational modes (TX, RX, TX/RX).
 
 ---
 
-### `MUSART_Init`
+#### `MUSART_Init`
 
 Initializes the USART peripheral with the specified configuration.
 
@@ -471,7 +492,7 @@ USART_Status_t MUSART_Init(USART_Config_t* cfg);
 
 ---
 
-### `MUSART_u8ReadByte`
+#### `MUSART_u8ReadByte`
 
 Reads a single byte from the USART receive buffer.
 
@@ -487,7 +508,7 @@ u8 MUSART_u8ReadByte(USART_Peripheral_t A_thisID);
 
 ---
 
-### `MUSART_u8BytesAvailable`
+#### `MUSART_u8BytesAvailable`
 
 Checks how many bytes are available in the receive buffer.
 
@@ -503,7 +524,7 @@ u8 MUSART_u8BytesAvailable(USART_Peripheral_t A_thisID);
 
 ---
 
-### `MUSART_u8WriteByte`
+#### `MUSART_u8WriteByte`
 
 Writes a single byte to the transmit buffer.
 
@@ -521,7 +542,7 @@ USART_Status_t MUSART_u8WriteByte(USART_Peripheral_t A_thisID, u8 A_u8ByteToPush
 
 ---
 
-### `MUSART_u8WriteString`
+#### `MUSART_u8WriteString`
 
 Writes a null-terminated string to the transmit buffer.
 
@@ -539,7 +560,7 @@ USART_Status_t MUSART_u8WriteString(USART_Peripheral_t A_thisID, const u8* A_u8S
 
 ---
 
-### `MUSART_u8ReadStringUntil`
+#### `MUSART_u8ReadStringUntil`
 
 Reads characters until a terminating character or buffer limit is reached.
 
@@ -566,7 +587,7 @@ USART_Status_t MUSART_u8ReadStringUntil(USART_Peripheral_t A_thisID,
 
 ---
 
-### `MUSART_vFlush`
+#### `MUSART_vFlush`
 
 Flushes both transmit and receive buffers.
 
@@ -582,7 +603,7 @@ USART_Status_t MUSART_vFlush(USART_Peripheral_t A_thisID);
 
 ---
 
-### `MUSART_u32ParseIntBlocking`
+#### `MUSART_u32ParseIntBlocking`
 
 Parses an integer from incoming data with a timeout.
 
@@ -603,7 +624,7 @@ USART_Status_t MUSART_u32ParseIntBlocking(USART_Peripheral_t A_thisID,
 
 ---
 
-### `MUSART_u8ParseInt`
+#### `MUSART_u8ParseInt`
 
 Non-blocking integer parser for incoming data.
 
@@ -621,31 +642,30 @@ USART_ParsingStatus_t MUSART_u8ParseInt(USART_Peripheral_t A_thisID, s32* A_ps32
 * `INVALID_ARGUMENT`
 * `TIMEOUT_OCCURRED`
 
-
-### `MUSART_u8ReadStringUntilBufferPatern`
+#### `MUSART_u8ReadStringUntilBufferPatern`
 
 Reads a string from the USART receive buffer until a specified terminating pattern is encountered or the buffer limit is reached.
 
-**Notes**: 
+**Notes**:
 
-- The function reads characters from the receive buffer and stores them in A_u8pStringBuffer until the terminating pattern is encountered or the buffer limit (STRING_BUFFER_MAX_SIZE) is reached. The resulting string in A_u8pStringBuffer is null-terminated. If the buffer limit is reached before encountering the terminating pattern, it returns USART_STRING_BUFFER_OVF. Ensure that A_u8pStringBuffer has enough space to hold the incoming string and the null terminator.
+* The function reads characters from the receive buffer and stores them in A_u8pStringBuffer until the terminating pattern is encountered or the buffer limit (STRING_BUFFER_MAX_SIZE) is reached. The resulting string in A_u8pStringBuffer is null-terminated. If the buffer limit is reached before encountering the terminating pattern, it returns USART_STRING_BUFFER_OVF. Ensure that A_u8pStringBuffer has enough space to hold the incoming string and the null terminator.
 
-- The function is non-blocking Synchronous function and can be called repeatedly to continue parsing until the terminating pattern is found in order to use the input buffer you must be sure that the function returned  `DONE_PARSING` if not then you cant use the buffer as it is still being filled.
+* The function is non-blocking Synchronous function and can be called repeatedly to continue parsing until the terminating pattern is found in order to use the input buffer you must be sure that the function returned  `DONE_PARSING` if not then you cant use the buffer as it is still being filled.
 
-for example 
+for example
 
 ``` c
 if (MUSART_u8ReadStringUntilBufferPatern(USART_PERIPH_1 , buffer , 50 , buffer2) == DONE_PARSING) {
-			MUSART_u8WriteString(USART_PERIPH_1 , buffer);
-			if (buffer[0] == 'o' && buffer[1] == 'n') {
-				MGPIO_vSetPinValue(GPIO_A , GPIO_PIN_0 , GPIO_PIN_HIGH);	
-			}
-			else if (buffer[0] == 'o' && buffer[1] == 'f' && buffer[2] == 'f') {
-				MGPIO_vSetPinValue(GPIO_A , GPIO_PIN_0 , GPIO_PIN_LOW);
-			}
-			else {
-				// Ignore unknown commands
-			}
+   MUSART_u8WriteString(USART_PERIPH_1 , buffer);
+   if (buffer[0] == 'o' && buffer[1] == 'n') {
+    MGPIO_vSetPinValue(GPIO_A , GPIO_PIN_0 , GPIO_PIN_HIGH); 
+   }
+   else if (buffer[0] == 'o' && buffer[1] == 'f' && buffer[2] == 'f') {
+    MGPIO_vSetPinValue(GPIO_A , GPIO_PIN_0 , GPIO_PIN_LOW);
+   }
+   else {
+    // Ignore unknown commands
+   }
 }
 ```
 
@@ -665,8 +685,10 @@ USART_Status_t MUSART_u8ReadStringUntilBufferPatern(USART_Peripheral_t A_thisID,
 * `TIMEOUT_OCCURRED` if a timeout occurs during parsing.
 * `INVALID_BUFFER_SIZE` if the provided buffer size is invalid.
 * `USART_ERR_BAD_PERIPH` if the specified peripheral is invalid.
+
 ---
-### Configuration Example
+
+#### Configuration Example
 
 ```c
 // USART_cfg.h
@@ -688,3 +710,214 @@ USART_Status_t MUSART_u8ReadStringUntilBufferPatern(USART_Peripheral_t A_thisID,
 
 #endif // USART_CFG_H
 ```
+
+### SPI - Functions
+
+The Serial Peripheral Interface (SPI) driver provides APIs to configure and use SPI peripherals for synchronous serial communication. It supports multiple modes, baud rates, data frame formats, and operational modes (full-duplex, half-duplex, simplex).
+
+#### SPI - Struct Configuration
+
+```c
+typedef struct {
+    SPI_Peripheral_t myPeripheral;
+    SPI_Mode_t mySPIMode;
+    u32 myBaudRate;
+    SPI_OperationMode_t myOperationMode;
+    SPI_DataShift_t dataShift;
+    SPI_DataFrameLength_t dataFrameLn;
+    SPI_ClockPhasePolarity_t ClockPhasePol;
+    SPI_NSSMode_t NSSMode;
+    SPI_FrameFormat_t myformat;
+} SPI_Config_t;
+```
+
+* myPeripheral: Specifies the SPI peripheral to be used (SPI_PERIPH_1, SPI_PERIPH_2, etc.).
+* mySPIMode: Specifies the SPI mode (MASTER or SLAVE).
+* myBaudRate: Specifies the baud rate for the SPI clock.
+  * The baud rate is determined by dividing the peripheral clock by a factor (e.g., CLK_DIV_2, CLK_DIV_4, etc.).
+* myOperationMode: Specifies the operation mode (FULL_DUPLEX, HALF_DUPLEX, SIMPLEX_TRANSMIT, SIMPLEX_RECIEVE).
+* dataShift: Specifies the data shift order (LSB_FIRST or MSB_FIRST).
+* dataFrameLn: Specifies the data frame length (DATA_FRAME_8BIT or DATA_FRAME
+_16BIT).
+* ClockPhasePol: Specifies the clock phase and polarity (CLK_PHA_POL_MODE_0, CLK_PHA_POL_MODE_1, etc.).
+* NSSMode: Specifies the NSS (Slave Select) mode (NSS_SW, NSS_OE, NSS_OD).
+* myformat: Specifies the frame format (MOTOROLA_FORMAT or TI_FORMAT).
+
+#### `MSPI_vInit`
+
+Initializes the SPI peripheral with the specified configuration.
+
+```c
+void MSPI_vInit(SPI_Config_t* cfg);
+```
+
+* **`cfg`**: Pointer to a `SPI_Config_t` structure containing the configuration parameters.
+**Returns:**
+* `SPI_OK` if initialized successfully.
+* Error codes: `SPI_ERR_NULLCFG`, `SPI_ERR_BAD_PERIPH`.
+**Notes:**
+* GPIO pins for SPI (SCK, MISO, MOSI, NSS) must be configured before calling.
+
+#### `MSPI_vSendData`
+
+```c
+SPI_status MSPI_vSendData(SPI_peripheralID_t peripheral , u16 A_u16Data);
+```
+
+* **`peripheral`**: The SPI peripheral ID to use for sending data (SPI_PERIPH_1, SPI_PERIPH_2, etc.).
+* **`A_u16Data`**: The data to be sent (8-bit or 16-bit based on configuration).
+**Returns:**
+* `SPI_OK` if data is sent successfully.
+* Error codes: `SPI_ERR_NULLDATA`, `SPI_ERR_BAD_PERIPH`.
+**Notes:**
+* Ensure the SPI peripheral is initialized before calling this function.
+
+#### `MSPI_u16RecieveData`
+
+```c
+SPI_status MSPI_u16RecieveData(SPI_peripheralID_t peripheral , u16* A_u16Data); // Not fully implemented
+```
+
+* **`peripheral`**: The SPI peripheral ID to use for receiving data (SPI_PERIPH_1, SPI_PERIPH_2, etc.).
+* **`A_u16Data`**: Pointer to the variable where the received data will be stored (8-bit or 16-bit based on configuration).
+**Returns:**
+* `SPI_OK` if data is received successfully.
+* Error codes: `SPI_ERR_NULLDATA`, `SPI_ERR_BAD_PERIPH`.
+**Notes:**
+* Ensure the SPI peripheral is initialized before calling this function.
+**Example Usage:**
+
+```c
+u16 receivedData;
+SPI_status status = MSPI_u16RecieveData(SPI_PERIPH_1, &receivedData);
+if (status == SPI_OK) {
+    // Data received successfully
+} else {
+    // Handle error
+}
+```
+
+## HAL Interface Guide for STM32F4
+
+This guide provides documentation for the Hardware Abstraction Layer (HAL) drivers, TFT , DAC , LedMatrix , S2P , NEC , Seven Segment ESP8266 , MPU6050 .
+
+### TFT - Functions
+
+void HTFT_vInit(HTFT_cfg_t*cfg);
+void HTFT_vSet_Xposition(u8 X_start , u8 X_end );
+void HTFT_vSet_Yposition(u8 Y_start , u8 Y_end );
+void HTFT_vDrawImage(const tImage* image, u8 x, u8 y);
+void HTFT_vDrawRect(u8 x, u8 y, u8 width, u8 height, u16 color);
+void HTFT_vFillBackground(u16 color);
+void HTFT_vDrawAsciiChar(u8 x_start, u8 y_start , u8 character, u16 color, u16 bgColor) ;
+void HTFT_vWriteString(u8 x_start, u8 y_start , u8* str ,u16 color, u16 bgColor );
+
+#### `HTFT_vInit`
+
+Initializes the TFT display with the specified configuration.
+
+```c
+void HTFT_vInit(HTFT_cfg_t* cfg);
+```
+
+* **`cfg`**: Pointer to a `HTFT_cfg_t` structure containing the configuration parameters.
+
+* mySPI: Specifies the SPI peripheral to be used (SPI_PERIPH_1, SPI_PERIPH_2, etc.).
+* myPixelFormat: Specifies the pixel format (PIXEL_FORMAT_16BIT or PIXEL_FORMAT_18BIT).
+* myScreenSize: Specifies the screen size (SCREEN_SIZE_128x128, SCREEN_SIZE_128x160, SCREEN_SIZE_240x320).
+* myRSTport: Specifies the GPIO port for the reset pin (e.g., GPIO_A, GPIO_B, etc.).
+* myRSTpin: Specifies the GPIO pin number for the reset pin (e.g., GPIO_PIN_0, GPIO_PIN_1, etc.).
+* myA0port: Specifies the GPIO port for the A0 (data/command) pin.
+* myA0pin: Specifies the GPIO pin number for the A0 pin.
+
+#### `HTFT_vSet_Xposition`
+
+Sets the X position range for subsequent drawing operations.
+
+```c
+void HTFT_vSet_Xposition(u8 X_start , u8 X_end );
+```
+
+* **`X_start`**: The starting X position (0 to screen width - 1).
+* **`X_end`**: The ending X position (0 to screen width - 1).
+
+#### `HTFT_vSet_Yposition`
+
+Sets the Y position range for subsequent drawing operations.
+
+```c
+void HTFT_vSet_Yposition(u8 Y_start , u8 Y_end );
+```
+
+* **`Y_start`**: The starting Y position (0 to screen height - 1).
+* **`Y_end`**: The ending Y position (0 to screen height - 1).
+
+#### `HTFT_vDrawImage`
+
+Draws an image at the specified position on the TFT display.
+
+```c  
+void HTFT_vDrawImage(const tImage* image, u8 x, u8 y);
+```
+
+* **`image`**: Pointer to a `tImage` structure containing the image data.
+* **`x`**: The X position to draw the image (0 to screen width - 1).
+* **`y`**: The Y position to draw the image (0 to screen height - 1).
+
+#### `HTFT_vDrawRect`
+
+Draws a rectangle at the specified position with the given dimensions and color.
+
+```c
+void HTFT_vDrawRect(u8 x, u8 y, u8 width, u8 height, u16 color);
+```
+
+* **`x`**: The X position of the top-left corner of the rectangle (0 to screen width - 1).
+* **`y`**: The Y position of the top-left corner of the rectangle (0 to screen height - 1).
+* **`width`**: The width of the rectangle (1 to screen width - x).
+* **`height`**: The height of the rectangle (1 to screen height - y).
+* **`color`**: The color of the rectangle in 16-bit RGB565 format.
+
+#### `HTFT_vFillBackground`
+
+Fills the entire TFT display with the specified background color.
+
+```c
+void HTFT_vFillBackground(u16 color);
+```
+
+* **`color`**: The background color in 16-bit RGB565 format.
+
+```c
+void HTFT_vFillBackground(u16 color);
+```
+
+* **`color`**: The background color in 16-bit RGB565 format.
+
+#### `HTFT_vDrawAsciiChar`
+
+Draws a single ASCII character at the specified position with the given foreground and background colors.
+
+```c
+void HTFT_vDrawAsciiChar(u8 x_start, u8 y_start , u8 character, u16 color, u16 bgColor);
+```
+
+* **`x_start`**: The X position to draw the character (0 to screen width - 1).
+* **`y_start`**: The Y position to draw the character (0 to screen height - 1).
+* **`character`**: The ASCII character to draw (0x20 to 0x7E).
+* **`color`**: The foreground color of the character in 16-bit RGB565 format.
+* **`bgColor`**: The background color behind the character in 16-bit RGB565 format.
+
+#### `HTFT_vWriteString`
+
+Writes a null-terminated string at the specified position with the given foreground and background colors.
+
+```c  
+void HTFT_vWriteString(u8 x_start, u8 y_start , u8* str ,u16 color, u16 bgColor );
+```
+
+* **`x_start`**: The X position to start writing the string (0 to screen width - 1).
+* **`y_start`**: The Y position to start writing the string (0 to screen height - 1).
+* **`str`**: Pointer to the null-terminated string to write.
+* **`color`**: The foreground color of the text in 16-bit RGB565 format.
+* **`bgColor`**: The background color behind the text in 16-bit RGB565 format.

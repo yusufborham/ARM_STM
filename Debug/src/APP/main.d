@@ -71,7 +71,27 @@ src/APP/main.o: ../src/APP/main.c ../src/APP/../MCAL/RCC/RCC_int.h \
  ../src/APP/../MCAL/SPI/../../LIB/BIT_MATH.h \
  ../src/APP/../MCAL/SPI/../../LIB/Delay.h \
  ../src/APP/../MCAL/SPI/../../LIB/MATH_Fn.h \
- ../src/APP/../MCAL/SPI/SPI_cfg.h
+ ../src/APP/../MCAL/SPI/SPI_cfg.h ../src/APP/../HAL/TFT/TFT_int.h \
+ ../src/APP/../HAL/TFT/../../LIB/STD_TYPES.h \
+ ../src/APP/../HAL/TFT/../../LIB/BIT_MATH.h \
+ ../src/APP/../HAL/TFT/../../LIB/Delay.h \
+ ../src/APP/../HAL/TFT/../../MCAL/GPIO/GPIO_int.h \
+ ../src/APP/../HAL/TFT/../../MCAL/GPIO/GPIO_prv.h \
+ ../src/APP/../HAL/TFT/../../MCAL/RCC/RCC_int.h \
+ ../src/APP/../HAL/TFT/../../MCAL/RCC/../../LIB/STD_TYPES.h \
+ ../src/APP/../HAL/TFT/../../MCAL/RCC/RCC_prv.h \
+ ../src/APP/../HAL/TFT/../../MCAL/SYSTICK/SYSTICK_int.h \
+ ../src/APP/../HAL/TFT/../../MCAL/SYSTICK/SYSTICK_prv.h \
+ ../src/APP/../HAL/TFT/../../MCAL/EXTI/EXTI_int.h \
+ ../src/APP/../HAL/TFT/../../MCAL/EXTI/EXTI_prv.h \
+ ../src/APP/../HAL/TFT/../../MCAL/NVIC/NVIC_int.h \
+ ../src/APP/../HAL/TFT/../../MCAL/NVIC/../../LIB/STD_TYPES.h \
+ ../src/APP/../HAL/TFT/../../MCAL/NVIC/../../LIB/BIT_MATH.h \
+ ../src/APP/../HAL/TFT/../../MCAL/NVIC/NVIC_prv.h \
+ ../src/APP/../HAL/TFT/../../MCAL/SPI/SPI_int.h \
+ ../src/APP/../HAL/TFT/../../MCAL/SYSCFG/SYSCFG_int.h \
+ ../src/APP/../HAL/TFT/font.h ../src/APP/../HAL/TFT/TFT_prv.h \
+ ../src/APP/../HAL/TFT/TFT_int.h ../src/APP/../HAL/TFT/TFT_prv.h
 
 ../src/APP/../MCAL/RCC/RCC_int.h:
 
@@ -238,3 +258,49 @@ src/APP/main.o: ../src/APP/main.c ../src/APP/../MCAL/RCC/RCC_int.h \
 ../src/APP/../MCAL/SPI/../../LIB/MATH_Fn.h:
 
 ../src/APP/../MCAL/SPI/SPI_cfg.h:
+
+../src/APP/../HAL/TFT/TFT_int.h:
+
+../src/APP/../HAL/TFT/../../LIB/STD_TYPES.h:
+
+../src/APP/../HAL/TFT/../../LIB/BIT_MATH.h:
+
+../src/APP/../HAL/TFT/../../LIB/Delay.h:
+
+../src/APP/../HAL/TFT/../../MCAL/GPIO/GPIO_int.h:
+
+../src/APP/../HAL/TFT/../../MCAL/GPIO/GPIO_prv.h:
+
+../src/APP/../HAL/TFT/../../MCAL/RCC/RCC_int.h:
+
+../src/APP/../HAL/TFT/../../MCAL/RCC/../../LIB/STD_TYPES.h:
+
+../src/APP/../HAL/TFT/../../MCAL/RCC/RCC_prv.h:
+
+../src/APP/../HAL/TFT/../../MCAL/SYSTICK/SYSTICK_int.h:
+
+../src/APP/../HAL/TFT/../../MCAL/SYSTICK/SYSTICK_prv.h:
+
+../src/APP/../HAL/TFT/../../MCAL/EXTI/EXTI_int.h:
+
+../src/APP/../HAL/TFT/../../MCAL/EXTI/EXTI_prv.h:
+
+../src/APP/../HAL/TFT/../../MCAL/NVIC/NVIC_int.h:
+
+../src/APP/../HAL/TFT/../../MCAL/NVIC/../../LIB/STD_TYPES.h:
+
+../src/APP/../HAL/TFT/../../MCAL/NVIC/../../LIB/BIT_MATH.h:
+
+../src/APP/../HAL/TFT/../../MCAL/NVIC/NVIC_prv.h:
+
+../src/APP/../HAL/TFT/../../MCAL/SPI/SPI_int.h:
+
+../src/APP/../HAL/TFT/../../MCAL/SYSCFG/SYSCFG_int.h:
+
+../src/APP/../HAL/TFT/font.h:
+
+../src/APP/../HAL/TFT/TFT_prv.h:
+
+../src/APP/../HAL/TFT/TFT_int.h:
+
+../src/APP/../HAL/TFT/TFT_prv.h:

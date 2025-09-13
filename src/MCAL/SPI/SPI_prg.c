@@ -318,3 +318,20 @@ void SPI1_IRQHandler(void){
     SPI_HandlerRoutine(SPI_PERIPH_1) ;
 }
 
+void SPI2_IRQHandler(void){
+    // Handle SPI2 interrupt
+    SPI_HandlerRoutine(SPI_PERIPH_2) ;
+}
+
+void SPI3_IRQHandler(void){
+    // Handle SPI3 interrupt
+    SPI_HandlerRoutine(SPI_PERIPH_3) ;
+}
+
+void SPI4_IRQHandler(void){
+    // Handle SPI4 interrupt
+    SPI_HandlerRoutine(SPI_PERIPH_4) ;
+}
+
+
+

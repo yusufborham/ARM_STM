@@ -26,6 +26,20 @@
 #include "../MCAL/USART/USART_int.h"
 #include "../MCAL/SPI/SPI_int.h"
 #include "../MCAL/SPI/SPI_cfg.h"
+#include "../HAL/TFT/TFT_int.h"
+#include "../HAL/TFT/TFT_prv.h"
+// #include "img.h"
+
+void switchText(void);
+
+volatile u8 changed = 1 ;
+volatile u8 toggle = 0 ;
+
+// const tImage Image = { image_data_Image, 128, 160, 16 };
+
+u8 Mytext2[50] = "Hello my Friend How are you" ;
+u8 Mytext1[50] = "I am fine thank you ";
+
 
 
 int main(void) {
@@ -40,56 +54,59 @@ int main(void) {
 	MRCC_vEnableClk(RCC_APB2, USART1EN);
 	MRCC_vEnableClk(RCC_APB2, SPI1EN);
 
-	GPIOx_PinConfig_t ledPin = {
+	MEXTI_vEnableExternalInterruptLine(GPIO_PIN_3);
+
+	MEXTI_vSetTriggerCondition(GPIO_PIN_3, FALLING_EDGE_INTERRUPT_TRIGGER);
+
+	MEXTI_vSetCallBackFunction(GPIO_PIN_3, switchText);
+
+	MSYSCFG_vSetExternalInterruptLine(GPIO_A, GPIO_PIN_3);
+
+	MNVIC_vEnableInterrupt(EXTI3_IRQn);
+
+	MNVIC_vConfigGroupPriority(NVIC_PriorityGroup16_SubGroup0);
+    MNVIC_vSetPriority(EXTI3_IRQn, 6, 0);
+
+	GPIOx_PinConfig_t button = {
 		.Port = GPIO_A,
-		.Pin = GPIO_PIN_0,
-		.Mode = GPIO_MODE_OUTPUT,
-		.OutputType = GPIO_OTYPE_PP,
+		.Pin = GPIO_PIN_3,
+		.Mode = GPIO_MODE_INPUT,
 		.AltFunc = GPIO_AF0,
 		.Speed = GPIO_SPEED_HIGH,
-		.PullType = GPIO_PUPD_NONE
+		.PullType = GPIO_PUPD_PULL_UP
 	};
-	MGPIO_vPinInit(&ledPin);
+	MGPIO_vPinInit(&button);
 
-	// set GPIO A9 to be used as a TX for the USART1 
-
-	GPIOx_PinConfig_t mosiPin = {
-		.Port = GPIO_A,
-		.Pin = GPIO_PIN_7,
-		.Mode = GPIO_MODE_ALTERNATE,	
-		.AltFunc = GPIO_AF5
-	};
-
-	MGPIO_vPinInit(&mosiPin);
-
-	GPIOx_PinConfig_t sck = {
-		.Port = GPIO_A,
-		.Pin = GPIO_PIN_5,
-		.Mode = GPIO_MODE_ALTERNATE,
-		.AltFunc = GPIO_AF5
+	HTFT_cfg_t myHTFT = {
+	.mySPI = SPI_PERIPH_1,
+	.myPixelFormat = PIXEL_FORMAT_16BIT,
+	.myScreenSize = SCREEN_SIZE_128X160,
+	.myRSTport = GPIO_A,
+	.myRSTpin = GPIO_PIN_1,
+	.myA0port = GPIO_A,
+	.myA0pin = GPIO_PIN_2
 	};
 
-	MGPIO_vPinInit(&sck);
-
-	SPI_Config_t spi1_cfg = {
-		.myPeripheral = SPI_PERIPH_1,
-		.mySPIMode = MASTER,
-		.myBaudRate = CLK_DIV_8,
-		.myOperationMode = SIMPLEX_TRANSMIT,
-		.dataFrameLn = DATA_FRAME_16BIT,
-		.dataShift = MSB_FIRST,
-		.ClockPhasePol = CLK_PHA_POL_MODE_0,
-		.NSSMode = NSS_SW
-	};
-
-	MSPI_vInit(&spi1_cfg);
-
+	HTFT_vInit(&myHTFT);
+	DELAY_MS(100);
+	HTFT_vFillBackground(0); // Fill background with black color
+	// HTFT_vDrawImage(&Image, 0, 0);
+	
 	while (1) {
-		for (u16 i = 0; i < 65000; i++) {
-			MSPI_vSendData(SPI_PERIPH_1, i);
-			DELAY_US(10);
+		if (changed) {
+		HTFT_vFillBackground(0); // Fill background with black color
+		HTFT_vWriteString(5, 5 , toggle ? Mytext1 : Mytext2 ,TFT_WHITE, TFT_BLACK ) ;
+		changed = 0 ;
 		}
+
 	}
 return 0;
+}
+
+
+void switchText(void){
+	changed = 1 ;
+	toggle = 1 - toggle ;
+	DELAY_MS(100);
 }
 

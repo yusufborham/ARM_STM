@@ -4,14 +4,14 @@
 #include "../../LIB/STD_TYPES.h"
 #include "../../LIB/BIT_MATH.h"
 
-#include "../../MCAL/GPIO/gpio_int.h"
-#include "../../MCAL/GPIO/gpio_prv.h"
+#include "../../MCAL/GPIO/GPIO_int.h"
+#include "../../MCAL/GPIO/GPIO_prv.h"
 
-#include "../../MCAL/RCC/rcc_int.h"
-#include "../../MCAL/RCC/rcc_prv.h"
+#include "../../MCAL/RCC/RCC_int.h"
+#include "../../MCAL/RCC/RCC_prv.h"
 
-#include "../../MCAL/SYSTICK/systick_int.h"
-#include "../../MCAL/SYSTICK/systick_prv.h"
+#include "../../MCAL/SYSTICK/SYSTICK_int.h"
+#include "../../MCAL/SYSTICK/SYSTICK_prv.h"
 
 #include "../../MCAL/EXTI/EXTI_int.h"
 #include "../../MCAL/EXTI/EXTI_prv.h"

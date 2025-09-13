@@ -5,8 +5,10 @@
 u32 G_u32ClockSource = 0;
 
 volatile u8 G_u8Flag = 0;
+volatile u8 CalledBefore = 0 ;
 
 volatile u32 G_u32Millis = 0 ;
+volatile u32 G_u32Micros = 0 ;
 
 void (*G_pvCallBack)(void) = NULL;
 
@@ -245,17 +247,26 @@ u32 MSYSTICK_millis(){
     return G_u32Millis;
 }
 
+u32 MSYSTICK_micros(){
+    u32 L_microElapsed = MSYSTICK_u32GetElapsedTimeUs() ;
+    u32 L_totalMicro = G_u32Millis*1000 + L_microElapsed ;
+    return L_totalMicro;
+}
+
 void MSYSTICK_vHandlerRoutine(void){
-    G_u32Millis++;
+    G_u32Millis++   ;
 }
 
 void MSYSTICK_vEnableBckgroundMillis(){
-    #if SYSTICK_RUN_MILLIS_FUNCTION == 1
-        MSYSTICK_vChooseClockSource(SYSTICK_CLK_SOURCE_AHB_DIV_8);
-        MSYSTICK_vSetIntervalMulti(1 , MSYSTICK_vHandlerRoutine);  
-    #else 
-        return;
-    #endif
+    if (!CalledBefore){
+        #if SYSTICK_RUN_MILLIS_FUNCTION == 1
+            MSYSTICK_vChooseClockSource(SYSTICK_CLK_SOURCE_AHB_DIV_1);
+            MSYSTICK_vSetIntervalMulti(1 , MSYSTICK_vHandlerRoutine);  
+        #else 
+            return;
+        #endif
+        CalledBefore = 1 ;
+    }
 }
 
 void SysTick_Handler(void){

@@ -178,5 +178,12 @@ u32 MSYSTICK_millis();
 
 void MSYSTICK_vEnableBckgroundMillis();
 
+/*
+* @brief Get the number of microseconds since SysTick was initialized.
+* @return u32 - Number of microseconds elapsed.
+*/
+u32 MSYSTICK_micros();
+
+
 
 #endif /* SYSTICK_INT_H */

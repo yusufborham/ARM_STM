@@ -28,22 +28,16 @@
 #include "../MCAL/SPI/SPI_cfg.h"
 #include "../HAL/TFT/TFT_int.h"
 #include "../HAL/TFT/TFT_prv.h"
+#include "../HAL/Ultasonic/Ultrasonic_int.h"
 // #include "img.h"
 
-void switchText(void);
 
-volatile u8 changed = 1 ;
-volatile u8 toggle = 0 ;
-
-// const tImage Image = { image_data_Image, 128, 160, 16 };
-
-u8 Mytext2[50] = "Hello my Friend How are you" ;
-u8 Mytext1[50] = "I am fine thank you ";
 
 
 
 int main(void) {
 	// enable clock for GPIOA, GPIOB and SYSCFG
+		// enable clock for GPIOA, GPIOB and SYSCFG
 	MRCC_vInit();
 	MRCC_vSetAHBPrescaler(AHB_PRESCALER_DIVIDE_1);
 	
@@ -54,59 +48,59 @@ int main(void) {
 	MRCC_vEnableClk(RCC_APB2, USART1EN);
 	MRCC_vEnableClk(RCC_APB2, SPI1EN);
 
-	MEXTI_vEnableExternalInterruptLine(GPIO_PIN_3);
+    // if not using the usart just comment this part un comment the next line 
+    MSYSTICK_vEnableBckgroundMillis();
 
-	MEXTI_vSetTriggerCondition(GPIO_PIN_3, FALLING_EDGE_INTERRUPT_TRIGGER);
+    // enable tx pin for usart 1
+    GPIOx_PinConfig_t USART1_TX_Pin = {
+       .Port = GPIO_A,
+       .Pin = GPIO_PIN_9,
+       .Mode = GPIO_MODE_ALTERNATE,
+       .Speed = GPIO_SPEED_VERY_HIGH,
+       .AltFunc = GPIO_AF7  // AF7 for USART1
+    };
+    MGPIO_vPinInit(&USART1_TX_Pin);
 
-	MEXTI_vSetCallBackFunction(GPIO_PIN_3, switchText);
+    USART_Config_t myUsart = {
+       .fclk = USART_CLK_25MHZ ,
+       .peripheral = USART_PERIPH_1,
+       .baudRate = USART_BAUDRATE_115200,
+       .wordLength = USART_WORD_LENGTH_8BITS,
+       .stopBits = USART_STOP_BITS_1,
+       .parity = USART_PARITY_NONE,
+       .sampleRate = USART_SAMPLE_16_TIMES,
+       .sampleMethod = USART_SAMPLE_METHOD_THREE_BITS,
+       .mode = USART_MODE_TX_ONLY
+    };
 
-	MSYSCFG_vSetExternalInterruptLine(GPIO_A, GPIO_PIN_3);
+    MUSART_Init(&myUsart);
 
-	MNVIC_vEnableInterrupt(EXTI3_IRQn);
+    Ultrasonic_cfg_t myUltrasonic = {
+        .Trig_port = GPIO_A ,
+        .Trig_pin  = GPIO_PIN_2 ,
+        .Echo_port = GPIO_A ,
+        .Echo_pin  = GPIO_PIN_3 
+    } ;
+    HUltra_vInit(&myUltrasonic) ;
 
-	MNVIC_vConfigGroupPriority(NVIC_PriorityGroup16_SubGroup0);
-    MNVIC_vSetPriority(EXTI3_IRQn, 6, 0);
+    u8 buffer[50] ;
+    const u8 welcom[50] = "Hello from the stm32  " ;
+    f32 distance = 0.0 ;
 
-	GPIOx_PinConfig_t button = {
-		.Port = GPIO_A,
-		.Pin = GPIO_PIN_3,
-		.Mode = GPIO_MODE_INPUT,
-		.AltFunc = GPIO_AF0,
-		.Speed = GPIO_SPEED_HIGH,
-		.PullType = GPIO_PUPD_PULL_UP
-	};
-	MGPIO_vPinInit(&button);
+    MUSART_u8WriteString(USART_PERIPH_1 , welcom );
 
-	HTFT_cfg_t myHTFT = {
-	.mySPI = SPI_PERIPH_1,
-	.myPixelFormat = PIXEL_FORMAT_16BIT,
-	.myScreenSize = SCREEN_SIZE_128X160,
-	.myRSTport = GPIO_A,
-	.myRSTpin = GPIO_PIN_1,
-	.myA0port = GPIO_A,
-	.myA0pin = GPIO_PIN_2
-	};
-
-	HTFT_vInit(&myHTFT);
-	DELAY_MS(100);
-	HTFT_vFillBackground(0); // Fill background with black color
-	// HTFT_vDrawImage(&Image, 0, 0);
-	
 	while (1) {
-		if (changed) {
-		HTFT_vFillBackground(0); // Fill background with black color
-		HTFT_vWriteString(5, 5 , toggle ? Mytext1 : Mytext2 ,TFT_WHITE, TFT_BLACK ) ;
-		changed = 0 ;
-		}
+
+        if (HUltra_u8ReadDisatnce(&myUltrasonic, &distance) == FINISHED){
+            ftoa(distance , buffer ) ;
+            MUSART_u8WriteString(USART_PERIPH_1 , buffer );
+            const u8 cm[5] = " cm \n" ;
+            MUSART_u8WriteString(USART_PERIPH_1 , cm );
+        }
+        DELAY_MS(100) ;
+
 
 	}
 return 0;
-}
-
-
-void switchText(void){
-	changed = 1 ;
-	toggle = 1 - toggle ;
-	DELAY_MS(100);
 }
 

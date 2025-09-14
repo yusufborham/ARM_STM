@@ -197,20 +197,20 @@ USART_Status_t MUSART_u8WriteByte(USART_Peripheral_t A_thisID, u8 A_u8ByteToPush
 */
 USART_Status_t MUSART_u8WriteString(USART_Peripheral_t A_thisID, const u8* A_u8StringToPush);
 
-/*
-@brief: Reads a string from the USART receive buffer until a specified terminating character is encountered or the buffer limit is reached.
-@param: A_thisID - The USART peripheral identifier (USART_PERIPH_1, USART_PERIPH_2, or USART_PERIPH_6).
-@param: A_u8pStringBuffer - Pointer to the buffer where the received string will be stored.
-@param: A_u32BufferSize - The size of the buffer pointed to by A_u8pStringBuffer.
-@param: A_u8TerminatingChar - The character that indicates the end of the string.
-@return: USART_Status_t indicating success or error code.
-@note: The function reads characters from the receive buffer and stores them in A_u8pStringBuffer until A_u8TerminatingChar is encountered or the buffer limit (STRING_BUFFER_MAX_SIZE) is reached.
-       The resulting string in A_u8pStringBuffer is null-terminated.
-       If the buffer limit is reached before encountering the terminating character, it returns USART_STRING_BUFFER_OVF.
-       Ensure that A_u8pStringBuffer has enough space to hold the incoming string and the null terminator.
-*/
-USART_Status_t MUSART_u8ReadStringUntil(USART_Peripheral_t A_thisID, u8 *A_u8pStringBuffer,u32 A_u32BufferSize ,u8 A_u8TerminatingChar);
-
+/**
+ * @brief Reads a string from the USART receive buffer until a terminating character is found.
+ * @note  This function is NON-BLOCKING and STATEFUL. It is designed to be called
+ * repeatedly from the application's main loop. It processes one byte at a time.
+ * @param A_thisID The USART peripheral to read from.
+ * @param A_u8pStringBuffer Pointer to the buffer where the resulting string will be stored.
+ * @param A_u32BufferSize The total size of the destination buffer.
+ * @param A_u8TerminatingChar The character that signals the end of a line (e.g., '\n').
+ * @return USART_ParsingStatus_t
+ * - DONE_PARSING: A complete line has been received and the buffer is ready.
+ * - STILL_PARSING: No new data or the line is not yet complete.
+ * - USART_STRING_BUFFER_OVF: The buffer filled up before the terminator was found.
+ */
+USART_Status_t MUSART_u8ReadStringUntil(USART_Peripheral_t A_thisID, u8 *A_u8pStringBuffer, u32 A_u32BufferSize, u8 A_u8TerminatingChar);
 /*
 @brief: Reads a string from the USART receive buffer until a specified terminating pattern is encountered or the buffer limit is reached.
 @param: A_thisID - The USART peripheral identifier (USART_PERIPH_1, USART_PERIPH_2, or USART_PERIPH_6).

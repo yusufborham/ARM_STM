@@ -11,6 +11,9 @@ static USART_Buffer_t G_aUSART_Buffer_data[USART_NUMBER] = {0};
 static USART_InterruptStatus_t G_aUSART_InterruptStatus[USART_NUMBER] = {0};
 static USART_StringFunctionStatus_t G_aUSART_StringFunStatus[USART_NUMBER] = {0} ;
 
+// ... Other static variables and functions from your driver ...
+static USART_StringParseStatus_t G_aUSART_StringParseStatus[USART_NUMBER] = {{0}};
+
 USART_Status_t USART_vHandlerRoutine(USART_Peripheral_t thisID);
 void MUSART_vBaudRateCalculations(u32 A_u32BaudRateValue ,u8 A_u8SampleRate ,u32 A_u32USART_Fclk,USART_BaudRate_cfg_t* A_sBaudRateCfg);
 static inline USART_RegDef_t* MUSART_pGetRegDef(USART_Peripheral_t peripheral) ;
@@ -229,7 +232,7 @@ USART_Status_t MUSART_u8WriteByte(USART_Peripheral_t A_thisID , u8 A_u8ByteToPus
 
     USART_Buffer_t* L_spUSART_buffData = &G_aUSART_Buffer_data[A_thisID];
 
-    u16 nextPtr = (L_spUSART_buffData->txPutPtr + 1) % USART_MAX_TX_BUFFER_SIZE;
+    u32 nextPtr = (L_spUSART_buffData->txPutPtr + 1) % USART_MAX_TX_BUFFER_SIZE;
     if (nextPtr == L_spUSART_buffData->txGetPtr) {
         return USART_ERR_BUFFER_FULL; // no space
     }
@@ -266,20 +269,50 @@ USART_Status_t MUSART_u8WriteString(USART_Peripheral_t A_thisID ,const u8* A_u8S
     return USART_OK ;
 }
 
-USART_Status_t MUSART_u8ReadStringUntil(USART_Peripheral_t A_thisID, u8 *A_u8pStringBuffer,u32 A_u32BufferSize ,u8 A_u8TerminatingChar){
-    static u32 idx = 0 ;
-    while (MUSART_u8BytesAvailable(A_thisID)){
-       A_u8pStringBuffer[idx] = MUSART_u8ReadByte(A_thisID) ;
-       if ( (A_u8pStringBuffer[idx] == A_u8TerminatingChar) || idx >= A_u32BufferSize - 1 ){
-            A_u8pStringBuffer[idx] = '\0' ;
-            idx = 0 ;
-            if (idx >= A_u32BufferSize - 1)
-                return USART_STRING_BUFFER_OVF ;
-            break ;
-       }
-       idx++;
+USART_Status_t MUSART_u8ReadStringUntil(USART_Peripheral_t A_thisID, u8 *A_u8pStringBuffer, u32 A_u32BufferSize, u8 A_u8TerminatingChar) {
+    // --- Precondition Checks (Safety) ---
+    if (A_u8pStringBuffer == NULL || A_u32BufferSize == 0) {
+        return INVALID_ARGUMENT;
     }
-    return USART_OK  ;
+    if (A_thisID >= USART_NUMBER) { // Use zero-indexed check
+        return INVALID_ARGUMENT;
+    }
+
+    // Use a dedicated, persistent state for this function
+    USART_StringParseStatus_t* state = &G_aUSART_StringParseStatus[A_thisID];
+
+    // --- Non-Blocking Read Loop (Processes available data only) ---
+    while (MUSART_u8BytesAvailable(A_thisID)) {
+        // Check for buffer overflow BEFORE reading a new byte
+        if (state->idx >= A_u32BufferSize - 1) {
+            // Buffer is full. Discard further data until reset.
+            state->overflow = 1; // Mark overflow state
+            (void)MUSART_u8ReadByte(A_thisID); // Read byte to discard it
+            continue; // Get next byte
+        }
+
+        u8 byte = MUSART_u8ReadByte(A_thisID);
+
+        if (byte == A_u8TerminatingChar) {
+            // End of line found.
+            A_u8pStringBuffer[state->idx] = '\0'; // Null-terminate the string
+
+            // Store the final status before resetting the state
+            USART_Status_t final_status = state->overflow ? USART_STRING_BUFFER_OVF : DONE_PARSING;
+
+            // Reset state for the next call
+            state->idx = 0;
+            state->overflow = 0;
+            
+            return final_status;
+        } else {
+            // Regular character, add it to the buffer
+            A_u8pStringBuffer[state->idx++] = byte;
+        }
+    }
+
+    // If we exit the loop, it means no more bytes are available right now.
+    return STILL_PARSING;
 }
 
 /* the serial read till terminal pattern was inspred from this C code i have written 

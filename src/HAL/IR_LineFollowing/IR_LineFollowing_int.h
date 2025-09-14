@@ -2,10 +2,9 @@
 #define IR_LINEFOLLOWING_INT_H
 
 #include "../../LIB/STD_TYPES.h"
-#include "../GPIO/GPIO_int.h"
+#include "../../MCAL/GPIO/GPIO_int.h"
 #include "IR_LineFollowing_cfg.h"
 
-// --- Type Definitions ---
 
 /**
  * @brief Defines the logic level of the IR sensor when a black line is detected.
@@ -35,7 +34,6 @@ typedef struct {
     u8 IR_pins[NUM_IR_SENSORS];   /**< Array of GPIO pin IDs for each sensor (e.g., GPIO_PIN_0). */
     IR_SensorType_t sensorType;   /**< The logic type of the sensors in the array. */
     
-    // --- Private Driver State ---
     u8 blackLevel;                /**< Internal state, do not modify. Stores the logic level for "black". */
 } IR_LineFollowing_cfg_t;
 

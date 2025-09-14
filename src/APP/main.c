@@ -29,6 +29,7 @@
 #include "../HAL/TFT/TFT_int.h"
 #include "../HAL/TFT/TFT_prv.h"
 #include "../HAL/Ultasonic/Ultrasonic_int.h"
+#include "../HAL/IR_LineFollowing/IR_LineFollowing_int.h"
 // #include "img.h"
 
 
@@ -82,6 +83,14 @@ int main(void) {
         .Echo_pin  = GPIO_PIN_3 
     } ;
     HUltra_vInit(&myUltrasonic) ;
+
+    IR_LineFollowing_cfg_t myIR = {
+        .IR_ports = {GPIO_B, GPIO_B, GPIO_B, GPIO_B, GPIO_B},
+        .IR_pins  = {GPIO_PIN_0, GPIO_PIN_1, GPIO_PIN_2, GPIO_PIN_10, GPIO_PIN_11},
+        .sensorType = HIGH_WHEN_LINE_DETECTED
+    };
+
+    HIR_vInit(&myIR);
 
     u8 buffer[50] ;
     const u8 welcom[50] = "Hello from the stm32  " ;

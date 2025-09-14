@@ -921,3 +921,319 @@ void HTFT_vWriteString(u8 x_start, u8 y_start , u8* str ,u16 color, u16 bgColor 
 * **`str`**: Pointer to the null-terminated string to write.
 * **`color`**: The foreground color of the text in 16-bit RGB565 format.
 * **`bgColor`**: The background color behind the text in 16-bit RGB565 format.
+
+### Ultasonic - Functions
+
+The Ultrasonic driver provides APIs to interface with ultrasonic distance sensors, allowing for distance measurement in various applications.
+
+#### `HUltra_vInit`
+
+Initializes the ultrasonic sensor with the specified configuration.
+
+```c
+void HUltra_vInit(Ultrasonic_cfg_t* cfg);
+```
+
+* **`cfg`**: Pointer to a `Ultrasonic_cfg_t` structure containing the configuration parameters.
+  * Trig_port: Specifies the GPIO port for the trigger pin (e.g., GPIO_A, GPIO_B, etc.).
+  * Trig_pin: Specifies the GPIO pin number for the trigger pin (e.g., GPIO_PIN_0, GPIO_PIN_1, etc.).
+  * Echo_port: Specifies the GPIO port for the echo pin (e.g., GPIO_A, GPIO_B, etc.).
+  * Echo_pin: Specifies the GPIO pin number for the echo pin (e.g., GPIO_PIN_0, GPIO_PIN_1, etc.).
+
+#### `HUltra_u8ReadDisatnce`
+
+Reads the distance measured by the ultrasonic sensor.
+
+```c
+Ultrasonic_measuingState_t HUltra_u8ReadDisatnce(Ultrasonic_cfg_t* cfg , f32* ptr) ;
+```
+
+* **`cfg`**: Pointer to a `Ultrasonic_cfg_t` structure containing the configuration parameters.
+* **`ptr`**: Pointer to a float variable where the measured distance will be stored
+
+* **Returns**: An `Ultrasonic_measuingState_t` enum indicating the measurement state:
+  * `MEASURING`: The measurement is still in progress.
+  * `FINISHED`: The measurement is complete, and the distance value is available in the variable pointed to by `ptr`.
+
+```c
+if (HUltra_u8ReadDisatnce(&myUltrasonic, &distance) == FINISHED){
+            ftoa(distance , buffer ) ;
+            MUSART_u8WriteString(USART_PERIPH_1 , buffer );
+            const u8 cm[5] = " cm \n" ;
+            MUSART_u8WriteString(USART_PERIPH_1 , cm );
+}
+```
+
+### IR - Functions
+
+The IR line-following sensor array driver provides APIs to interface with an array of infrared sensors for line detection and position calculation.
+
+#### HIR_vInit 
+
+initializes the GPIO pins for the IR sensor array.
+
+```c
+void HIR_vInit(IR_LineFollowing_cfg_t* cfg);
+```
+
+* **`cfg`**: Pointer to a user-defined configuration structure for the sensor array. 
+* **Returns**: IR_Status_t 
+  * IR_STATUS_OK on success.
+  * IR_STATUS_ERROR_NULL_PTR if cfg is NULL.
+
+#### HIR_f32ReadSensors
+
+Reads all sensors, calculates the line position, and provides status.
+
+```c
+IR_Status_t HIR_f32ReadSensors(IR_LineFollowing_cfg_t* cfg, f32* position_out);
+```
+
+* **`cfg`**: Pointer to the initialized configuration structure.
+* **`position_out`**: Pointer to a float where the calculated line position will be stored. The range is from -2.0 (far left) to +2.0 (far right), with 0.0 being centered.
+
+* **Returns**: IR_Status_t 
+  * IR_STATUS_LINE_AQUIRED if the line is detected normally.
+  * IR_STATUS_LINE_LOST if no sensors detect the line.
+  * IR_STATUS_INTERSECTION if all sensors detect the line.
+  * IR_STATUS_ERROR_NULL_PTR if a null pointer argument is provided.
+
+```c
+f32 position;
+if (HIR_f32ReadSensors(&myIRArray, &position) == IR_STATUS_LINE_AQUIRED) {
+    // Use the position value for control
+    ftoa(position, buffer);
+    MUSART_u8WriteString(USART_PERIPH_1, buffer);
+    const u8 newline[2] = "\n";
+    MUSART_u8WriteString(USART_PERIPH_1, newline);
+}
+```
+
+* Note : In the configuartion file you define the number of sesnors in Ultra_cfg.h
+
+
+
+### DAC - Functions
+
+The Digital-to-Analog Converter (DAC) driver provides APIs to configure and use a DAC peripheral for converting digital values to analog voltages.
+
+#### `HDAC_vInit`
+
+Initializes the DAC with the specified configuration.
+
+```c
+void HDAC_vInit(DAC_cfg_t* cfg) {
+}
+```
+
+* **`cfg`**: Pointer to a `DAC_cfg_t` structure containing the configuration parameters.
+  * Port: Specifies the GPIO port for the DAC pins (e.g., GPIO_A, GPIO_B, etc.).
+  * Pins: An array of 8 GPIO pin numbers for the DAC output (e.g., GPIO_PIN_0, GPIO_PIN_1, etc.).
+
+#### `HDAC_vSetValue`
+
+Sets the DAC output value.
+
+```c
+void HDAC_vSetValue(DAC_cfg_t* cfg, u8 value) {
+}
+```
+
+* **`cfg`**: Pointer to a `DAC_cfg_t` structure containing the configuration parameters.
+* **`value`**: The value to set on the DAC output (0 to 255 for 8-bit resolution).
+
+#ifndef LEDMATRIX_INT_H
+#define LEDMATRIX_INT_H
+
+#include "../../LIB/STD_TYPES.h"
+#include "../../LIB/BIT_MATH.h"
+
+#include "../../MCAL/GPIO/gpio_int.h"
+#include "../../MCAL/GPIO/gpio_prv.h"
+
+#include "../../MCAL/RCC/rcc_int.h"
+#include "../../MCAL/RCC/rcc_prv.h"
+
+#include "../../MCAL/SYSTICK/systick_int.h"
+#include "../../MCAL/SYSTICK/systick_prv.h"
+
+#include "../../HAL/STP/STP_int.h"
+#include "../../LIB/Delay.h"
+// Your code here
+
+typedef struct {
+    u8 Pin ;
+}Pin_cfg_t;
+
+typedef enum{
+    LED_MATRIX_NORMAL_MODE , 
+    LED_MATRIX_STP_MODE 
+}LedMatrix_Mode_t ;
+typedef struct {
+    LedMatrix_Mode_t Mode ;
+    union {
+        struct {
+                u8 Port1;
+                Pin_cfg_t RowPins[8];
+                u8 Port2;
+                Pin_cfg_t ColPins[8];
+        }normalConfig; 
+
+        STP_Config_t stpConfig;
+    } Config;
+
+} LedMatrix_config_t;
+
+/*
+ * @brief Initialize the GPIO pins for the LED matrix.
+ * @param LedMatrix_cfg Pointer to the LED matrix configuration structure.
+ */
+void HLedMatrix_vInitPins(LedMatrix_config_t* LedMatrix_cfg);
+
+/*
+ * @brief Display a specific row on the LED matrix.
+ * @param LedMatrix_cfg Pointer to the LED matrix configuration structure.
+ * @param row The row data to display (8 bits).
+ */
+void HLedMatrix_vDisplayRow(LedMatrix_config_t* LedMatrix_cfg, u8 row);
+
+/*
+ * @brief Display a specific column on the LED matrix.
+ * @param LedMatrix_cfg Pointer to the LED matrix configuration structure.
+ * @param col The column data to display (8 bits).
+ */
+void HLedMatrix_vDisplayColumn(LedMatrix_config_t* LedMatrix_cfg, u8 col);
+
+/*
+ * @brief Display a specific frame on the LED matrix.
+ * @param LedMatrix_cfg Pointer to the LED matrix configuration structure.
+ * @param A_au8FrameData Array containing the frame data (8 rows).
+ */
+void HLedMatrix_vDisplayFrame(LedMatrix_config_t* LedMatrix_cfg , u8 A_au8FrameData[8]);
+
+/*
+ * @brief Display a specific frame on the LED matrix.
+ * @param LedMatrix_cfg Pointer to the LED matrix configuration structure.
+ * @param A_au8FrameData Array containing the frame data (8 rows).
+ */
+void HLedMatrix_vDisplayFrame(LedMatrix_config_t* LedMatrix_cfg , u8 A_au8FrameData[8]);
+
+/*
+ * @brief Display a specific frame on the LED matrix for a given duration.
+ * @param A_u32DurationMs Duration to display the frame (in milliseconds).
+ * @param LedMatrix_cfg Pointer to the LED matrix configuration structure.
+ * @param A_au8FrameData Array containing the frame data (8 rows).
+ */
+void HLedMatrix_vDisplayFrameFor(u32 A_u32DurationMs , LedMatrix_config_t* LedMatrix_cfg , u8 A_au8FrameData[8]);
+
+#endif // LEDMATRIX_INT_H
+
+### LedMatrix - Functions
+
+The LED Matrix driver provides APIs to control an 8x8 LED matrix display, allowing for the display of patterns, characters, and animations.
+
+#### `HLedMatrix_vInitPins`
+
+Initializes the GPIO pins for the LED matrix.
+
+```c
+void HLedMatrix_vInitPins(LedMatrix_config_t* LedMatrix_cfg);
+```
+
+* **`LedMatrix_cfg`**: Pointer to a `LedMatrix_config_t` structure containing the configuration parameters.
+  * Mode: Specifies the operation mode (LED_MATRIX_NORMAL_MODE or LED_MATRIX_STP_MODE).
+  * Config: Union containing configuration details for normal mode (GPIO ports and pins) or STP mode (shift register configuration).  
+
+  * Example code for normal mode:
+    * Port1: GPIO port for rows.
+    * RowPins: Array of 8 GPIO pin numbers for the rows.
+    * Port2: GPIO port for columns.
+    * ColPins: Array of 8 GPIO pin numbers for the columns.
+
+``` c
+LedMatrix_config_t led_matrix_cfg = {
+    .Mode = LED_MATRIX_NORMAL_MODE,
+    .Config.normalConfig = {
+        .Port1 = GPIO_A,
+        .RowPins = {
+            { .Pin = GPIO_PIN_0 },
+            { .Pin = GPIO_PIN_1 },
+            { .Pin = GPIO_PIN_2 },
+            { .Pin = GPIO_PIN_3 },
+            { .Pin = GPIO_PIN_4 },
+            { .Pin = GPIO_PIN_5 },
+            { .Pin = GPIO_PIN_6 },
+            { .Pin = GPIO_PIN_7 }
+        },
+        .Port2 = GPIO_B,
+        .ColPins = {
+            { .Pin = GPIO_PIN_0 },
+            { .Pin = GPIO_PIN_1 },
+            { .Pin = GPIO_PIN_2 },
+            { .Pin = GPIO_PIN_5 },
+            { .Pin = GPIO_PIN_6 },  
+            { .Pin = GPIO_PIN_7 },
+            { .Pin = GPIO_PIN_8 },
+            { .Pin = GPIO_PIN_9 }
+        }
+      }
+};
+
+  HLedMatrix_vInitPins(&led_matrix_cfg);
+```
+
+* Example code for STP mode:
+
+``` c
+STP_Config_t stp_config = {
+    .DataPin = GPIO_PIN_0,
+    .ClockPin = GPIO_PIN_1,
+    .LatchPin = GPIO_PIN_2
+};
+
+LedMatrix_config_t led_matrix_cfg = {
+    .Mode = LED_MATRIX_STP_MODE,
+    .Config.stpConfig = stp_config
+};
+
+HLedMatrix_vInitPins(&led_matrix_cfg);
+```
+
+#### `HLedMatrix_vDisplayFrame`
+
+Displays a specific frame on the LED matrix.
+
+```c
+void HLedMatrix_vDisplayFrame(LedMatrix_config_t* LedMatrix_cfg , u8 A_au8FrameData[8]);
+```
+
+* **`LedMatrix_cfg`**: Pointer to a `LedMatrix_config_t` structure containing the configuration parameters.
+* **`A_au8FrameData`**: Array containing the frame data (8 rows).
+
+``` c
+u8 frame_data[8] = {
+    0b11111111,
+    0b10000001,
+    0b10000001,
+    0b10000001,
+    0b10000001,
+    0b10000001,
+    0b11111111,
+    0b00000000
+};
+
+HLedMatrix_vDisplayFrame(&led_matrix_cfg, frame_data);
+``` 
+
+#### `HLedMatrix_vDisplayFrameFor`
+
+Displays a specific frame on the LED matrix for a given duration.
+
+```c
+void HLedMatrix_vDisplayFrameFor(u32 A_u32DurationMs , LedMatrix_config_t* LedMatrix_cfg , u8 A_au8FrameData[8]);
+```
+
+* **`A_u32DurationMs`**: Duration to display the frame (in milliseconds).
+* **`LedMatrix_cfg`**: Pointer to a `LedMatrix_config_t` structure
+* **`A_au8FrameData`**: Array containing the frame data (8 rows).
+

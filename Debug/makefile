@@ -29,6 +29,7 @@ RM := rm -rf
 -include src/HAL/STP/subdir.mk
 -include src/HAL/NEC/subdir.mk
 -include src/HAL/LedMatrix/subdir.mk
+-include src/HAL/IR_LineFollowing/subdir.mk
 -include src/HAL/DAC/subdir.mk
 -include src/APP/subdir.mk
 -include subdir.mk

@@ -29,6 +29,7 @@ CPP_DEPS :=
 SUBDIRS := \
 src/APP \
 src/HAL/DAC \
+src/HAL/IR_LineFollowing \
 src/HAL/LedMatrix \
 src/HAL/NEC \
 src/HAL/STP \

@@ -67,12 +67,12 @@ void HLedMatrix_vDisplayColumn(LedMatrix_config_t* LedMatrix_cfg, u8 col);
  */
 void HLedMatrix_vDisplayFrame(LedMatrix_config_t* LedMatrix_cfg , u8 A_au8FrameData[8]);
 
-/*
- * @brief Display a specific frame on the LED matrix.
- * @param LedMatrix_cfg Pointer to the LED matrix configuration structure.
- * @param A_au8FrameData Array containing the frame data (8 rows).
- */
-void HLedMatrix_vDisplayFrame(LedMatrix_config_t* LedMatrix_cfg , u8 A_au8FrameData[8]);
+// /*
+//  * @brief Display a specific frame on the LED matrix.
+//  * @param LedMatrix_cfg Pointer to the LED matrix configuration structure.
+//  * @param A_au8FrameData Array containing the frame data (8 rows).
+//  */
+// void HLedMatrix_vDisplayFrame(LedMatrix_config_t* LedMatrix_cfg , u8 A_au8FrameData[8]);
 
 /*
  * @brief Display a specific frame on the LED matrix for a given duration.

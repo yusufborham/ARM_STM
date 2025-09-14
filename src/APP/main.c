@@ -92,7 +92,7 @@ int main(void) {
 
     HIR_vInit(&myIR);
 
-    u8 buffer[50] ;
+    u8 buffer[60] ;
     const u8 welcom[50] = "Hello from the stm32  " ;
     f32 distance = 0.0 ;
 

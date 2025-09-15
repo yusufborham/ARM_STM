@@ -68,6 +68,7 @@ typedef struct {
 #define GPIOEEN         4
 #define GPIOHEN         7
 
+// APB1
 #define TIM2EN          0
 #define TIM3EN          1   
 #define TIM4EN          2
@@ -81,6 +82,7 @@ typedef struct {
 #define I2C3EN         23 
 #define PWREN          28
 
+// APB2 
 #define TIM1EN         0
 #define USART1EN       4
 #define USART6EN       5

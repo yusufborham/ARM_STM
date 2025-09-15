@@ -4,6 +4,8 @@
 volatile u32 pulseWidth = 0 ;
 volatile u8 triggered = 0 ;
 Ultrasonic_measuingState_t G_myUltaState ; 
+u8 ECHO_PIN = 0 ;
+u8 ECHO_PORT = 0 ;
 
 ///////////////////// prototypes ////////////////////
 void handleUS(void);
@@ -14,13 +16,13 @@ void handleUS(void);
 /////////////////////////////////////////////////////
 void handleUS(void){
     static u32 pulseStart = 0 ;
-    if (MGPIO_u8GetPinValue(GPIO_A, GPIO_PIN_3) == 1){ // then we need to start timing 
-        pulseStart = MSYSTICK_micros();         // registered a start for the pulse 
+    if (MGPIO_u8GetPinValue(ECHO_PORT, ECHO_PIN) == 1){ // then we need to start timing 
+        pulseStart = MTIM10_vGetMicros();         // registered a start for the pulse 
         G_myUltaState = MEASURING ;
     } 
     else {
         u32 *ptr = &pulseWidth ;
-        *ptr =  MSYSTICK_micros() - pulseStart ;
+        *ptr =  MTIM10_vGetMicros() - pulseStart ;
         G_myUltaState = FINISHED ;
         pulseStart = 0;
     }
@@ -39,6 +41,8 @@ void HUltra_vInit(Ultrasonic_cfg_t* cfg){
 		.PullType = GPIO_PUPD_NONE
 	};
 	MGPIO_vPinInit(&echo);
+    ECHO_PIN = cfg->Echo_pin;
+    ECHO_PORT = cfg->Echo_port;
 
     GPIOx_PinConfig_t trig = {
         .Port = cfg->Trig_port,
@@ -102,7 +106,7 @@ void HUltra_vInit(Ultrasonic_cfg_t* cfg){
     }
 	
 
-    MSYSTICK_vEnableBckgroundMillis();
+     MTIM10_vInit();
 }
 
 Ultrasonic_measuingState_t HUltra_u8ReadDisatnce(Ultrasonic_cfg_t* cfg , f32* ptr) {

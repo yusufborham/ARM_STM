@@ -9,8 +9,7 @@
 #include "../../MCAL/GPIO/GPIO_int.h"
 #include "../../MCAL/GPIO/GPIO_prv.h"
 
-#include "../../MCAL/SYSTICK/SYSTICK_int.h"
-#include "../../MCAL/SYSTICK/SYSTICK_prv.h"
+#include "../../MCAL/TIM10/TIM10_int.h"
 
 #include "../../MCAL/EXTI/EXTI_int.h"
 #include "../../MCAL/EXTI/EXTI_prv.h"
